@@ -21,7 +21,7 @@ public class CategoryTransformation implements Transformation {
 
     @Override
     public List<String> transform(String data) {
-        if (category.contains(data))
+        if (category.getItems().contains(data))
             return Arrays.asList(data);
         else
             return Collections.emptyList();

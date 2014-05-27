@@ -10,7 +10,12 @@ import com.tbodt.puzzlesolver.PuzzleParser.CategoryDataContext;
 import com.tbodt.puzzlesolver.PuzzleParser.CategoryTransformationContext;
 import com.tbodt.puzzlesolver.PuzzleParser.FunctionTransformationContext;
 import com.tbodt.puzzlesolver.PuzzleParser.StringDataContext;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -27,7 +32,12 @@ public class PuzzleParseListener extends PuzzleBaseListener {
 
     @Override
     public void exitCategoryData(CategoryDataContext ctx) {
-        data.addAll(Category.forName(ctx.CATEGORY().getText()));
+        try {
+            data.addAll(Category.forName(ctx.CATEGORY().getText()).getItems());
+        }
+        catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
