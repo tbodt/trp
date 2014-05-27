@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.tbodt.puzzlesolver;
 
 import com.tbodt.puzzlesolver.PuzzleParser.CategoryDataContext;
@@ -22,6 +21,7 @@ import java.util.Set;
  * @author Theodore Dubois
  */
 public class PuzzleParseListener extends PuzzleBaseListener {
+
     private final Set<String> data = new HashSet<>();
     private final List<Transformation> transformations = new ArrayList<>();
 
@@ -37,6 +37,9 @@ public class PuzzleParseListener extends PuzzleBaseListener {
         }
         catch (IOException ex) {
             throw new RuntimeException(ex);
+        }
+        catch (IllegalArgumentException ex) {
+            System.err.println(ex.getMessage());
         }
     }
 
