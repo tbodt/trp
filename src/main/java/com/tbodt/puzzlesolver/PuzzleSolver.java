@@ -5,8 +5,11 @@
  */
 package com.tbodt.puzzlesolver;
 
-import java.io.*;
-import org.antlr.v4.runtime.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
@@ -16,13 +19,15 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
  * @author Theodore Dubois
  */
 public class PuzzleSolver {
+
     public static void main(String[] args) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             System.out.print(">>> ");
             String input = in.readLine();
-            if (input == null)
+            if (input == null) {
                 break;
+            }
             ANTLRInputStream inputStream = new ANTLRInputStream(input);
             PuzzleLexer lexer = new PuzzleLexer(inputStream);
             PuzzleParser parser = new PuzzleParser(new CommonTokenStream(lexer));
@@ -30,8 +35,7 @@ public class PuzzleSolver {
             ParseTreeWalker walker = new ParseTreeWalker();
             PuzzleParseListener listener = new PuzzleParseListener();
             walker.walk(listener, tree);
-            System.out.println(listener.getData());
-            System.out.println(listener.getTransformations());
+            System.out.println(Transformer.transform(listener.getData(), listener.getTransformations()));
         }
     }
 }

@@ -45,7 +45,15 @@ public class PuzzleParseListener extends PuzzleBaseListener {
 
     @Override
     public void exitCategoryTransformation(CategoryTransformationContext ctx) {
-        super.exitCategoryTransformation(ctx);
+        try {
+            transformations.add(new CategoryTransformation(Category.forName(ctx.CATEGORY().getText())));
+        }
+        catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        catch (IllegalArgumentException ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 
     @Override
