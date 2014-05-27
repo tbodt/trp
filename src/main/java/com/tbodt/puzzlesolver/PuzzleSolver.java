@@ -50,9 +50,8 @@ public class PuzzleSolver {
             ParseTreeWalker walker = new ParseTreeWalker();
             PuzzleParseListener listener = new PuzzleParseListener();
             walker.walk(listener, tree);
-            if (errors == false) {
+            if (errors == false)
                 System.out.println(transform(listener.getData(), listener.getTransformations()));
-            }
         }
     }
 

@@ -24,8 +24,9 @@ public class Category {
     private static final Map<String, Category> cache = new HashMap<>();
 
     private Category(String name) throws IOException {
-        if (Category.class.getResource(name) == null)
+        if (Category.class.getResource(name) == null) {
             throw new IllegalArgumentException("category " + name + " nonexistent");
+        }
         try (BufferedReader in = new BufferedReader(new InputStreamReader(Category.class.getResourceAsStream(name)))) {
             String item;
             while ((item = in.readLine()) != null) {
@@ -35,9 +36,10 @@ public class Category {
     }
 
     public static Category forName(String name) throws IOException {
-        if (cache.containsKey(name)) {
+        if (Category.class.getResource(name) == null)
+            return null;
+        if (cache.containsKey(name))
             return cache.get(name);
-        }
         Category c = new Category(name);
         cache.put(name, c);
         return c;
