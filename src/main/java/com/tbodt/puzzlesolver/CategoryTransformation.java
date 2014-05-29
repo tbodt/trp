@@ -5,26 +5,24 @@
  */
 package com.tbodt.puzzlesolver;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * A transformation that filters out strings in a category.
  */
 public class CategoryTransformation implements Transformation {
-    private Category category;
+    private final Category category;
 
     public CategoryTransformation(Category category) {
         this.category = category;
     }
 
     @Override
-    public List<String> transform(String data) {
+    public Set<String> transform(String data) {
         if (category.getItems().contains(data))
-            return Arrays.asList(data);
+            return new HashSet<>(Arrays.asList(data));
         else
-            return Collections.emptyList();
+            return Collections.emptySet();
     }
 
 }

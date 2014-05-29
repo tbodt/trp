@@ -7,14 +7,15 @@
 package com.tbodt.puzzlesolver;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
  * @author Theodore Dubois
  */
 public class FunctionTransformation implements Transformation {
-    private Function func;
-    private List<Object> args;
+    private final Function func;
+    private final List<Object> args;
 
     public FunctionTransformation(Function func, List<Object> args) {
         this.func = func;
@@ -22,8 +23,7 @@ public class FunctionTransformation implements Transformation {
     }
     
     @Override
-    public List<String> transform(String data) {
-        throw new UnsupportedOperationException("Method transform in class FunctionTransformation is not implemented");
+    public Set<String> transform(String data) {
+        return func.invoke(data, args.toArray());
     }
-
 }

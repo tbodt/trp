@@ -6,8 +6,7 @@
 package com.tbodt.puzzlesolver;
 
 import java.lang.reflect.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -48,11 +47,18 @@ public class Function {
         }
     }
 
-    public String[] invoke(String data, Object... parameters) {
+    @SuppressWarnings("unchecked")
+    public Set<String> invoke(String data, Object[] parameters) {
         try {
-            return (String[]) method.invoke(null, data, parameters);
+            return (Set<String>) method.invoke(null, data, parameters);
         } catch (ClassCastException | IllegalAccessException | InvocationTargetException ex) {
             throw new AssertionError("", ex);
         }
+    }
+    
+    // Functions start here
+    
+    public static Set<String> addChicken(String data) {
+        return new HashSet<>(Arrays.asList(data, "chicken"));
     }
 }
