@@ -10,11 +10,7 @@ import com.tbodt.puzzlesolver.PuzzleParser.CategoryTransformationContext;
 import com.tbodt.puzzlesolver.PuzzleParser.FunctionTransformationContext;
 import com.tbodt.puzzlesolver.PuzzleParser.StringDataContext;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -34,11 +30,9 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     public void exitCategoryData(CategoryDataContext ctx) {
         try {
             data.addAll(Category.forName(ctx.CATEGORY().getText()).getItems());
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
-        }
-        catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             System.err.println(ex.getMessage());
         }
     }
@@ -47,11 +41,9 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     public void exitCategoryTransformation(CategoryTransformationContext ctx) {
         try {
             transformations.add(new CategoryTransformation(Category.forName(ctx.CATEGORY().getText())));
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             throw new RuntimeException(ex);
-        }
-        catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             System.err.println(ex.getMessage());
         }
     }
@@ -68,4 +60,5 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     public List<Transformation> getTransformations() {
         return Collections.unmodifiableList(transformations);
     }
+
 }
