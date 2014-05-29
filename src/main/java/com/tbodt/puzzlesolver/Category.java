@@ -5,14 +5,8 @@
  */
 package com.tbodt.puzzlesolver;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 /**
  * A category. Embodies a set of words in the category.
@@ -32,6 +26,8 @@ public class Category {
             while ((item = in.readLine()) != null) {
                 items.add(item);
             }
+        } catch (IOException ex) {
+            throw new RuntimeException(ex); // those darn ol' checked exceptions are such a hassle
         }
     }
 
