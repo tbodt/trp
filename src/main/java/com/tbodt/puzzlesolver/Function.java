@@ -5,8 +5,7 @@
  */
 package com.tbodt.puzzlesolver;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ public class Function {
             throw new NoSuchMethodException(name);
     }
 
-    public static Function forNameAndArgs(String name) {
+    public static Function forName(String name) {
         if (cache.containsKey(name))
             return cache.get(name);
         try {
@@ -49,4 +48,11 @@ public class Function {
         }
     }
 
+    public String[] invoke(String data, Object... parameters) {
+        try {
+            return (String[]) method.invoke(null, data, parameters);
+        } catch (ClassCastException | IllegalAccessException | InvocationTargetException ex) {
+            throw new AssertionError("", ex);
+        }
+    }
 }
