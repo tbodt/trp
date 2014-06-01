@@ -43,8 +43,6 @@ public class PuzzleParseListener extends PuzzleBaseListener {
             transformations.add(new CategoryTransformation(Category.forName(ctx.CATEGORY().getText())));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
-        } catch (IllegalArgumentException ex) {
-            System.err.println(ex.getMessage());
         }
     }
 
