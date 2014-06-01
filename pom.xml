@@ -55,13 +55,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>org.antlr.v4.runtime.misc.TestRig</mainClass>
-                    <arguments>
-                        <argument>com.tbodt.puzzlesolver.Puzzle</argument>
-                        <argument>puzzle</argument>
-                        <argument>-gui</argument>
-                    </arguments>
-                    <classpathScope>compile</classpathScope>
+                    <mainClass>com.tbodt.puzzlesolver.PuzzleSolver</mainClass>
                 </configuration>
             </plugin>
             <plugin>
