@@ -47,6 +47,7 @@ public class PuzzleSolver {
                     dataStream = tx.transform(dataStream);
                 dataStream.forEach(System.out::println);
             }
+            System.gc(); // why not?
         }
     }
 

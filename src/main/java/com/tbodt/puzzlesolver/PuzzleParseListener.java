@@ -53,7 +53,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
         String name = ctx.FUNC().getText();
         List<Object> args = new ArrayList<>(ctx.value());
         args = args.stream().map(vctx -> ((ValueContext) vctx).val).collect(Collectors.toList());
-        transformations.add(new FunctionTransformation(Function.forName(name), args));
+        transformations.add(new FunctionTransformation(Function.forNameAndArgs(name, ctx.args), args));
     }
 
     public Set<String> getData() {

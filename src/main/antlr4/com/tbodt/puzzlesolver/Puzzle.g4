@@ -8,7 +8,7 @@ puzzle: data+ ':' transformation* EOF;
 data: STRING    # StringData
     | CATEGORY  # CategoryData
     ;
-transformation
+transformation returns [Class<?>[] args]
     : CATEGORY {
         try {
             if (Category.forName($CATEGORY.text) == null)
@@ -17,9 +17,10 @@ transformation
             throw new RuntimeException(ex);
         }
     }                                                                   # CategoryTransformation
-    | FUNC ( '(' value (',' value)* ')' )?  {
-        if (Function.forName($FUNC.text) == null)
-            notifyErrorListeners("nonexistent function " + $FUNC.text);
+    | FUNC ( '(' a+=value (',' a+=value)* ')' )? {
+        $args = $a.stream().map(ctx -> ctx.val.getClass()).toArray(Class[]::new);
+        if (Function.forNameAndArgs($FUNC.text, $args) == null)
+            notifyErrorListeners("nonexistent function " + $FUNC.text + " with arguments " + Function.argumentString($args));
     }                                                                   # FunctionTransformation
     ;
 value returns [Object val]
