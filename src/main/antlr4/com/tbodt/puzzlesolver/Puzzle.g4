@@ -11,13 +11,16 @@ data: STRING    # StringData
 transformation
     : CATEGORY {
         try {
-            if (Category.forName($CATEGORY.getText()) == null)
-                notifyErrorListeners("nonexistent category " + $CATEGORY.getText());
+            if (Category.forName($CATEGORY.text) == null)
+                notifyErrorListeners("nonexistent category " + $CATEGORY.text);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-    }                                       # CategoryTransformation
-    | FUNC ( '(' value (',' value)* ')' )?  # FunctionTransformation
+    }                                                                   # CategoryTransformation
+    | FUNC ( '(' value (',' value)* ')' )?  {
+        if (Function.forName($FUNC.text) == null)
+            notifyErrorListeners("nonexistent function " + $FUNC.text);
+    }                                                                   # FunctionTransformation
     ;
 value returns [Object val]
     : INT {$val = $INT.int;}
