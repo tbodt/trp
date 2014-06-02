@@ -5,7 +5,7 @@
  */
 package com.tbodt.puzzlesolver;
 
-import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * An input transformation.
@@ -17,5 +17,5 @@ public interface Transformation {
      * @param data the string to transform
      * @return a list of strings to replace the given string with
      */
-    Set<String> transform(String data);
+    Stream<String> transform(Stream<String> data);
 }

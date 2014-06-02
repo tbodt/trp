@@ -5,7 +5,7 @@
  */
 package com.tbodt.puzzlesolver;
 
-import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * A transformation that filters out strings in a category.
@@ -18,11 +18,8 @@ public class CategoryTransformation implements Transformation {
     }
 
     @Override
-    public Set<String> transform(String data) {
-        if (category.getItems().contains(data))
-            return new HashSet<>(Arrays.asList(data));
-        else
-            return Collections.emptySet();
+    public Stream<String> transform(Stream<String> data) {
+        return data.filter(datum -> category.getItems().contains(datum));
     }
 
 }

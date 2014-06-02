@@ -5,60 +5,29 @@
  */
 package com.tbodt.puzzlesolver;
 
-import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  *
  * @author Theodore Dubois
  */
 public class Function {
-    private final Method method;
-    private static final Map<String, Function> cache = new HashMap<>();
-
-    private Function(String name) throws NoSuchMethodException {
-        Method[] methods = Function.class.getMethods();
-        Method mt = null;
-        for (Method m : methods) {
-            if (!Modifier.isStatic(m.getModifiers()))
-                continue;
-            if (Modifier.isPrivate(m.getModifiers()))
-                continue;
-            if (m.getName().equals("forNameAndArgs"))
-                continue;
-            if (m.getName().equals(name))
-                mt = m;
-        }
-        if (mt != null)
-            method = mt;
-        else
-            throw new NoSuchMethodException(name);
-    }
-
-    public static Function forName(String name) {
-        if (cache.containsKey(name))
-            return cache.get(name);
-        try {
-            Function f = new Function(name);
-            cache.put(name, f);
-            return f;
-        } catch (NoSuchMethodException ex) {
-            return null;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public Set<String> invoke(String data, Object[] parameters) {
-        try {
-            return (Set<String>) method.invoke(null, data, parameters);
-        } catch (ClassCastException | IllegalAccessException | InvocationTargetException ex) {
-            throw new AssertionError("", ex);
-        }
+    private static final Map<String, Function.Transformation> functions = new HashMap<>();
+    static {
+        functions.put("addChicken", Function::addChicken);
     }
     
-    // Functions start here
+    public static Function.Transformation forName(String name) {
+        return functions.get(name);
+    }
     
-    public static Set<String> addChicken(String data) {
-        return new HashSet<>(Arrays.asList(data, "chicken"));
+    @FunctionalInterface
+    public interface Transformation {
+        Stream<String> transform(Stream<String> data, Object... parameters);
+    }
+
+    public static Stream<String> addChicken(Stream<String> data, Object[] parameters) {
+        return Stream.concat(data, Stream.of("chicken"));
     }
 }

@@ -5,17 +5,9 @@
  */
 package com.tbodt.puzzlesolver;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.BaseErrorListener;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
+import java.io.*;
+import java.util.stream.Stream;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
@@ -33,9 +25,8 @@ public class PuzzleSolver {
         while (true) {
             System.out.print(">>> ");
             String input = in.readLine();
-            if (input == null) {
+            if (input == null)
                 break;
-            }
             errors = false;
             ANTLRInputStream inputStream = new ANTLRInputStream(input);
             PuzzleLexer lexer = new PuzzleLexer(inputStream);
@@ -50,19 +41,13 @@ public class PuzzleSolver {
             ParseTreeWalker walker = new ParseTreeWalker();
             PuzzleParseListener listener = new PuzzleParseListener();
             walker.walk(listener, tree);
-            if (errors == false)
-                System.out.println(transform(listener.getData(), listener.getTransformations()));
+            if (errors == false) {
+                Stream<String> dataStream = listener.getData().parallelStream();
+                for (Transformation tx : listener.getTransformations())
+                    dataStream = tx.transform(dataStream);
+                dataStream.forEach(System.out::println);
+            }
         }
     }
 
-    public static Set<String> transform(Set<String> data, List<Transformation> transformations) {
-        for (Transformation tx : transformations) {
-            Set<String> newData = new HashSet<>();
-            for (String datum : data) {
-                newData.addAll(tx.transform(datum));
-            }
-            data = newData;
-        }
-        return data;
-    }
 }

@@ -9,8 +9,10 @@ import com.tbodt.puzzlesolver.PuzzleParser.CategoryDataContext;
 import com.tbodt.puzzlesolver.PuzzleParser.CategoryTransformationContext;
 import com.tbodt.puzzlesolver.PuzzleParser.FunctionTransformationContext;
 import com.tbodt.puzzlesolver.PuzzleParser.StringDataContext;
+import com.tbodt.puzzlesolver.PuzzleParser.ValueContext;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -48,7 +50,10 @@ public class PuzzleParseListener extends PuzzleBaseListener {
 
     @Override
     public void exitFunctionTransformation(FunctionTransformationContext ctx) {
-        super.exitFunctionTransformation(ctx);
+        String name = ctx.FUNC().getText();
+        List<Object> args = new ArrayList<>(ctx.value());
+        args = args.stream().map(vctx -> ((ValueContext) vctx).val).collect(Collectors.toList());
+        transformations.add(new FunctionTransformation(Function.forName(name), args));
     }
 
     public Set<String> getData() {
