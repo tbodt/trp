@@ -31,12 +31,15 @@ public class PuzzleSolver {
             ANTLRInputStream inputStream = new ANTLRInputStream(input);
             PuzzleLexer lexer = new PuzzleLexer(inputStream);
             PuzzleParser parser = new PuzzleParser(new CommonTokenStream(lexer));
-            parser.addErrorListener(new BaseErrorListener() {
+            ANTLRErrorListener errListener = new BaseErrorListener() {
                 @Override
                 public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int i, int i1, String string, RecognitionException re) {
                     errors = true;
                 }
-            });
+
+            };
+            parser.addErrorListener(errListener);
+            lexer.addErrorListener(errListener);
             ParseTree tree = parser.puzzle();
             ParseTreeWalker walker = new ParseTreeWalker();
             PuzzleParseListener listener = new PuzzleParseListener();
