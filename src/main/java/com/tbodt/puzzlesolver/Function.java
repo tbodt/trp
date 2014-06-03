@@ -20,6 +20,7 @@ public class Function {
         functions.put("distinct_", Function::distinct);
         functions.put("unique_", Function::distinct);
         functions.put("uniq_", Function::distinct);
+        functions.put("anagram_", Function::anagram);
     }
 
     public static Function.Transformation forName(String name) {
@@ -54,5 +55,21 @@ public class Function {
 
     public static Stream<String> distinct(Stream<String> data, Object[] parameters) {
         return data.distinct();
+    }
+
+    public static Stream<String> anagram(Stream<String> data, Object[] parameters) {
+        return data.unordered().flatMap(Function::allAnagrams).distinct();
+    }
+
+    private static Stream<String> allAnagrams(String data) {
+        if (data.length() <= 1)
+            return Stream.of(data);
+        Stream<String> ret = Stream.empty();
+        for (int i = 0; i < data.length(); i++) {
+            char ch = data.charAt(i);
+            String rest = new StringBuilder(data).deleteCharAt(i).toString();
+            ret = Stream.concat(ret, allAnagrams(rest).map(str -> ch + str)).unordered();
+        }
+        return ret;
     }
 }
