@@ -47,7 +47,7 @@ public class PuzzleSolver {
             if (errors == false) {
                 Stream<String> dataStream = listener.getData().parallelStream();
                 for (Transformation tx : listener.getTransformations())
-                    dataStream = tx.transform(dataStream);
+                    dataStream = tx.transform(dataStream).unordered();
                 dataStream.forEach(System.out::println);
             }
             System.gc(); // why not?
