@@ -22,11 +22,9 @@ public class PuzzleSolver {
 
     public static void main(String[] args) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        while (true) {
-            System.out.print(">>> ");
-            String input = in.readLine();
-            if (input == null)
-                break;
+        System.out.print(">>> ");
+        String input = in.readLine();
+        while (input != null) {
             errors = false;
             ANTLRInputStream inputStream = new ANTLRInputStream(input);
             PuzzleLexer lexer = new PuzzleLexer(inputStream);
@@ -52,6 +50,8 @@ public class PuzzleSolver {
                 dataStream.forEach(System.out::println);
             }
             System.gc(); // why not?
+            System.out.print(">>> ");
+            input = in.readLine();
         }
     }
 
