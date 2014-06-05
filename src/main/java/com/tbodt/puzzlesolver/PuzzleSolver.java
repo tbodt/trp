@@ -42,7 +42,7 @@ public class PuzzleSolver {
             lexer.addErrorListener(errListener);
             ParseTree tree = parser.puzzle();
             ParseTreeWalker walker = new ParseTreeWalker();
-            PuzzleParseListener listener = new PuzzleParseListener();
+            PuzzleParseListener listener = new PuzzleParseListener(errListener);
             walker.walk(listener, tree);
             if (errors == false) {
                 Stream<String> dataStream = listener.getData().parallelStream();

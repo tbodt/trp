@@ -9,51 +9,84 @@ import com.tbodt.puzzlesolver.PuzzleParser.CategoryDataContext;
 import com.tbodt.puzzlesolver.PuzzleParser.CategoryTransformationContext;
 import com.tbodt.puzzlesolver.PuzzleParser.FunctionTransformationContext;
 import com.tbodt.puzzlesolver.PuzzleParser.StringDataContext;
-import com.tbodt.puzzlesolver.PuzzleParser.ValueContext;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.antlr.v4.runtime.ANTLRErrorListener;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
 /**
  *
  * @author Theodore Dubois
  */
+@SuppressWarnings("null")
 public class PuzzleParseListener extends PuzzleBaseListener {
 
     private final Set<String> data = new HashSet<>();
     private final List<Transformation> transformations = new ArrayList<>();
+    private final ParseTreeProperty<Object> values = new ParseTreeProperty<>();
+    private final ANTLRErrorListener errListener;
+
+    public PuzzleParseListener(ANTLRErrorListener errListener) {
+        this.errListener = errListener;
+    }
 
     @Override
     public void exitStringData(StringDataContext ctx) {
-        data.add(ctx.STRING().getText());
+        data.add(stripEnds(ctx.STRING().getText()));
     }
 
     @Override
     public void exitCategoryData(CategoryDataContext ctx) {
-        try {
-            data.addAll(Category.forName(ctx.CATEGORY().getText()).getItems());
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalArgumentException ex) {
-            System.err.println(ex.getMessage());
+        String catName = ctx.CATEGORY().getText();
+        Category cat = Category.forName(catName);
+        if (cat == null) {
+            errListener.syntaxError(null, null, 0, 0, "nonexistent category " + catName, null);
+            return;
         }
+        data.addAll(cat.getItems());
     }
 
     @Override
     public void exitCategoryTransformation(CategoryTransformationContext ctx) {
-        try {
-            transformations.add(new CategoryTransformation(Category.forName(ctx.CATEGORY().getText())));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+        String catName = ctx.CATEGORY().getText();
+        Category cat = Category.forName(catName);
+        if (cat == null) {
+            errListener.syntaxError(null, null, 0, 0, "nonexistent category " + catName, null);
+            return;
         }
+        transformations.add(new CategoryTransformation(cat));
+    }
+
+    @Override
+    public void exitIntValue(PuzzleParser.IntValueContext ctx) {
+        values.put(ctx, Integer.valueOf(ctx.INT().getText()));
+    }
+
+    @Override
+    public void exitStringValue(PuzzleParser.StringValueContext ctx) {
+        values.put(ctx, ctx.STRING().getText());
     }
 
     @Override
     public void exitFunctionTransformation(FunctionTransformationContext ctx) {
         String name = ctx.FUNC().getText();
         List<Object> args = new ArrayList<>(ctx.value());
-        args = args.stream().map(vctx -> ((ValueContext) vctx).val).collect(Collectors.toList());
+        args = args.stream().map(vctx -> values.get((ParseTree) vctx)).collect(Collectors.toList());
+        Function fun = Function.forName(name);
+        if (fun == null) {
+            errListener.syntaxError(null, null, 0, 0, "no function with name " + name, null);
+            return;
+        }
+        if (!fun.isValidArguments(args.toArray())) {
+            errListener.syntaxError(null, null, 0, 0, "arguments " + args + " invalid", null);
+            return;
+        }
         transformations.add(new FunctionTransformation(Function.forName(name), args));
+    }
+
+    private static String stripEnds(String str) {
+        return str.substring(1, str.length() - 1);
     }
 
     public Set<String> getData() {
