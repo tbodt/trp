@@ -17,7 +17,7 @@ public class Category {
 
     private static final Map<String, Category> cache = new HashMap<>();
 
-    private Category(String name) throws IOException {
+    private Category(String name) {
         if (Category.class.getResource(name) == null) {
             throw new IllegalArgumentException("category " + name + " nonexistent");
         }
@@ -31,7 +31,7 @@ public class Category {
         }
     }
 
-    public static Category forName(String name) throws IOException {
+    public static Category forName(String name) {
         if (Category.class.getResource(name) == null)
             return null;
         if (cache.containsKey(name))
