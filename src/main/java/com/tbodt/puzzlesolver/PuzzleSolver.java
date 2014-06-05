@@ -33,7 +33,8 @@ public class PuzzleSolver {
             PuzzleParser parser = new PuzzleParser(new CommonTokenStream(lexer));
             ANTLRErrorListener errListener = new BaseErrorListener() {
                 @Override
-                public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int i, int i1, String string, RecognitionException re) {
+                public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int i, int i1, String msg, RecognitionException re) {
+                    System.out.println(msg);
                     errors = true;
                 }
 

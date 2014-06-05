@@ -38,7 +38,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
 
     @Override
     public void exitCategoryData(CategoryDataContext ctx) {
-        String catName = ctx.CATEGORY().getText();
+        String catName = stripEnds(ctx.CATEGORY().getText());
         Category cat = Category.forName(catName);
         if (cat == null) {
             errListener.syntaxError(null, null, 0, 0, "nonexistent category " + catName, null);
@@ -49,7 +49,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
 
     @Override
     public void exitCategoryTransformation(CategoryTransformationContext ctx) {
-        String catName = ctx.CATEGORY().getText();
+        String catName = stripEnds(ctx.CATEGORY().getText());
         Category cat = Category.forName(catName);
         if (cat == null) {
             errListener.syntaxError(null, null, 0, 0, "nonexistent category " + catName, null);
