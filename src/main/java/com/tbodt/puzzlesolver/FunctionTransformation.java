@@ -14,16 +14,16 @@ import java.util.stream.Stream;
  * @author Theodore Dubois
  */
 public class FunctionTransformation implements Transformation {
-    private final Function.Transformation func;
+    private final Function func;
     private final List<Object> args;
 
-    public FunctionTransformation(Function.Transformation func, List<Object> args) {
+    public FunctionTransformation(Function func, List<Object> args) {
         this.func = func;
         this.args = args;
     }
 
     @Override
     public Stream<String> transform(Stream<String> data) {
-        return func.transform(data, args.toArray());
+        return func.invoke(data, args.toArray());
     }
 }

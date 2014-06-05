@@ -6,6 +6,7 @@
 package com.tbodt.puzzlesolver;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -13,63 +14,87 @@ import java.util.stream.Stream;
  * @author Theodore Dubois
  */
 public class Function {
-    private static final Map<String, Function.Transformation> functions = new HashMap<>();
+    private Map<List<ArgumentType>, Lambda> overloadings;
+    private static final Map<String, Function> functions = new HashMap<>();
 
     static {
-        functions.put("add_s", Function::add);
-        functions.put("distinct_", Function::distinct);
-        functions.put("unique_", Function::distinct);
-        functions.put("uniq_", Function::distinct);
-        functions.put("anagram_", Function::anagram);
+        functions.put("add", new Function(Functions::add));
+        functions.put("distinct", new Function(Functions::distinct));
+        functions.put("unique", new Function(Functions::distinct));
+        functions.put("uniq", new Function(Functions::distinct));
+        functions.put("anagram", new Function(Functions::anagram));
     }
 
-    public static Function.Transformation forName(String name) {
-        return functions.get(name);
-    }
+    public enum ArgumentType {
+        INTEGER, STRING;
 
-    public static Function.Transformation forNameAndArgs(String name, Class<?>[] args) {
-        return forName(name + "_" + argumentString(args));
-    }
-
-    public static String argumentString(Class<?>[] args) {
-        StringBuilder b = new StringBuilder();
-        for (Class<?> cl : args)
-            if (cl == int.class || cl == Integer.class)
-                b.append("i");
-            else if (cl == String.class)
-                b.append("s");
+        public static ArgumentType typeOf(Object arg) {
+            if (arg.getClass() == Integer.class)
+                return INTEGER;
+            else if (arg.getClass() == String.class)
+                return STRING;
             else
-                b.append("?");
-        return b.toString();
+                throw new IllegalArgumentException("invalid argument type " + arg);
+        }
+
     }
 
     @FunctionalInterface
-    public interface Transformation {
-        Stream<String> transform(Stream<String> data, Object... parameters);
+    public interface Lambda {
+        Stream<String> invoke(Stream<String> data, Object... parameters);
 
     }
 
-    public static Stream<String> add(Stream<String> data, Object[] parameters) {
-        return Stream.concat(data, Stream.of((String) parameters[0]));
+    private Function(Lambda lambda, ArgumentType... argTypes) {
+        this(Collections.singletonMap(Arrays.asList(argTypes), lambda));
     }
 
-    public static Stream<String> distinct(Stream<String> data, Object[] parameters) {
-        return data.distinct();
+    private Function(Map<List<ArgumentType>, Lambda> overloadings) {
+        this.overloadings = Collections.unmodifiableMap(overloadings);
     }
 
-    public static Stream<String> anagram(Stream<String> data, Object[] parameters) {
-        return data.unordered().flatMap(Function::allAnagrams).distinct();
+    public static Function forName(String name) {
+        return functions.get(name);
     }
 
-    private static Stream<String> allAnagrams(String data) {
-        if (data.length() <= 1)
-            return Stream.of(data);
-        Stream<String> ret = Stream.empty();
-        for (int i = 0; i < data.length(); i++) {
-            char ch = data.charAt(i);
-            String rest = new StringBuilder(data).deleteCharAt(i).toString();
-            ret = Stream.concat(ret, allAnagrams(rest).map(str -> ch + str)).unordered();
+    public boolean isValidArguments(Object[] args) {
+        List<ArgumentType> argTypes = Arrays.stream(args).map(ArgumentType::typeOf).collect(Collectors.toList());
+        return overloadings.containsKey(argTypes);
+    }
+
+    public Stream<String> invoke(Stream<String> data, Object[] args) {
+        List<ArgumentType> argTypes = Arrays.stream(args).map(ArgumentType::typeOf).collect(Collectors.toList());
+        if (!overloadings.containsKey(argTypes))
+            throw new IllegalArgumentException("nonexistent overloading");
+        return overloadings.get(argTypes).invoke(data, args);
+    }
+
+    private static final class Functions {
+        public static Stream<String> add(Stream<String> data, Object[] parameters) {
+            return Stream.concat(data, Stream.of((String) parameters[0]));
         }
-        return ret;
+
+        public static Stream<String> distinct(Stream<String> data, Object[] parameters) {
+            return data.distinct();
+        }
+
+        public static Stream<String> anagram(Stream<String> data, Object[] parameters) {
+            return data.unordered().flatMap(Functions::allAnagrams).distinct();
+        }
+
+        private static Stream<String> allAnagrams(String data) {
+            if (data.length() <= 1)
+                return Stream.of(data);
+            Stream<String> ret = Stream.empty();
+            for (int i = 0; i < data.length(); i++) {
+                char ch = data.charAt(i);
+                String rest = new StringBuilder(data).deleteCharAt(i).toString();
+                ret = Stream.concat(ret, allAnagrams(rest).map(str -> ch + str)).unordered();
+            }
+            return ret;
+        }
+
+        private Functions() {
+        }
     }
 }
