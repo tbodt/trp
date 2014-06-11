@@ -12,20 +12,16 @@ import java.util.*;
  * A category. Embodies a set of words in the category.
  */
 public class Category {
-
-    private final Set<String> items = new HashSet<>();
-
+    private final Set<WordSequence> items = new HashSet<>();
     private static final Map<String, Category> cache = new HashMap<>();
 
     private Category(String name) {
-        if (Category.class.getResource(name) == null) {
+        if (Category.class.getResource(name) == null)
             throw new IllegalArgumentException("category " + name + " nonexistent");
-        }
         try (BufferedReader in = new BufferedReader(new InputStreamReader(Category.class.getResourceAsStream(name)))) {
             String item;
-            while ((item = in.readLine()) != null) {
-                items.add(item);
-            }
+            while ((item = in.readLine()) != null)
+                items.add(new WordSequence(item));
         } catch (IOException ex) {
             throw new RuntimeException(ex); // those darn ol' checked exceptions are such a hassle
         }
@@ -41,7 +37,8 @@ public class Category {
         return c;
     }
 
-    public Set<String> getItems() {
+    public Set<WordSequence> getItems() {
         return Collections.unmodifiableSet(items);
     }
+
 }

@@ -44,7 +44,7 @@ public class PuzzleSolver {
             PuzzleParseListener listener = new PuzzleParseListener(errListener);
             walker.walk(listener, tree);
             if (errors == false) {
-                Stream<String> dataStream = listener.getData().parallelStream();
+                Stream<WordSequence> dataStream = listener.getData().parallelStream();
                 for (Transformation tx : listener.getTransformations())
                     dataStream = tx.transform(dataStream).unordered();
                 dataStream.forEach(System.out::println);

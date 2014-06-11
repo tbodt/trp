@@ -11,5 +11,5 @@ import java.util.stream.Stream;
  * An input transformation.
  */
 public interface Transformation {
-    Stream<String> transform(Stream<String> data);
+    Stream<WordSequence> transform(Stream<WordSequence> data);
 }

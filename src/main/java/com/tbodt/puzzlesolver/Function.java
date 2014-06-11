@@ -5,6 +5,7 @@
  */
 package com.tbodt.puzzlesolver;
 
+import com.tbodt.puzzlesolver.WordSequence.Word;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,7 +19,6 @@ public class Function {
     private static final Map<String, Function> functions = new HashMap<>();
 
     static {
-        functions.put("add", new Function(Functions::add));
         functions.put("distinct", new Function(Functions::distinct));
         functions.put("unique", new Function(Functions::distinct));
         functions.put("uniq", new Function(Functions::distinct));
@@ -41,7 +41,7 @@ public class Function {
 
     @FunctionalInterface
     public interface Lambda {
-        Stream<String> invoke(Stream<String> data, Object... parameters);
+        Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] parameters);
 
     }
 
@@ -62,7 +62,7 @@ public class Function {
         return overloadings.containsKey(argTypes);
     }
 
-    public Stream<String> invoke(Stream<String> data, Object[] args) {
+    public Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] args) {
         List<ArgumentType> argTypes = Arrays.stream(args).map(ArgumentType::typeOf).collect(Collectors.toList());
         if (!overloadings.containsKey(argTypes))
             throw new IllegalArgumentException("nonexistent overloading");
@@ -70,26 +70,22 @@ public class Function {
     }
 
     private static final class Functions {
-        public static Stream<String> add(Stream<String> data, Object[] parameters) {
-            return Stream.concat(data, Stream.of((String) parameters[0]));
-        }
-
-        public static Stream<String> distinct(Stream<String> data, Object[] parameters) {
+        public static Stream<WordSequence> distinct(Stream<WordSequence> data, Object[] parameters) {
             return data.distinct();
         }
 
-        public static Stream<String> anagram(Stream<String> data, Object[] parameters) {
-            return data.unordered().flatMap(Functions::allAnagrams).distinct();
+        public static Stream<WordSequence> anagram(Stream<WordSequence> data, Object[] parameters) {
+            return data.unordered().flatMap(WordSequence.forEachWord(Functions::allAnagrams)).distinct();
         }
 
-        private static Stream<String> allAnagrams(String data) {
+        private static Stream<Word> allAnagrams(Word data) {
             if (data.length() <= 1)
                 return Stream.of(data);
-            Stream<String> ret = Stream.empty();
+            Stream<Word> ret = Stream.empty();
             for (int i = 0; i < data.length(); i++) {
                 char ch = data.charAt(i);
                 String rest = new StringBuilder(data).deleteCharAt(i).toString();
-                ret = Stream.concat(ret, allAnagrams(rest).map(str -> ch + str)).unordered();
+                ret = Stream.concat(ret, allAnagrams(new Word(rest)).map(word -> new Word(ch + word.toString()))).unordered();
             }
             return ret;
         }

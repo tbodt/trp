@@ -18,7 +18,7 @@ public class CategoryTransformation implements Transformation {
     }
 
     @Override
-    public Stream<String> transform(Stream<String> data) {
+    public Stream<WordSequence> transform(Stream<WordSequence> data) {
         return data.filter(datum -> category.getItems().contains(datum));
     }
 

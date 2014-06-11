@@ -22,7 +22,7 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
 @SuppressWarnings("null")
 public class PuzzleParseListener extends PuzzleBaseListener {
 
-    private final Set<String> data = new HashSet<>();
+    private final Set<WordSequence> data = new HashSet<>();
     private final List<Transformation> transformations = new ArrayList<>();
     private final ParseTreeProperty<Object> values = new ParseTreeProperty<>();
     private final ANTLRErrorListener errListener;
@@ -33,7 +33,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
 
     @Override
     public void exitStringData(StringDataContext ctx) {
-        data.add(stripEnds(ctx.STRING().getText()));
+        data.add(new WordSequence(stripEnds(ctx.STRING().getText())));
     }
 
     @Override
@@ -89,7 +89,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
         return str.substring(1, str.length() - 1);
     }
 
-    public Set<String> getData() {
+    public Set<WordSequence> getData() {
         return Collections.unmodifiableSet(data);
     }
 

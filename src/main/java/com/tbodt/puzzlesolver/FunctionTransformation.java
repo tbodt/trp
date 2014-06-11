@@ -23,7 +23,7 @@ public class FunctionTransformation implements Transformation {
     }
 
     @Override
-    public Stream<String> transform(Stream<String> data) {
+    public Stream<WordSequence> transform(Stream<WordSequence> data) {
         return func.invoke(data, args.toArray());
     }
 }
