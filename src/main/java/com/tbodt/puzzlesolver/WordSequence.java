@@ -122,7 +122,8 @@ public final class WordSequence implements Iterable<WordSequence.Word> {
                 Stream<Word> transformed = function.apply(word);
                 if (result == null)
                     result = transformed.map(WordSequence::new);
-                result = result.flatMap(seq -> transformed.map(w -> seq.append(w)));
+                else
+                    result = result.flatMap(seq -> transformed.map(w -> seq.append(w)));
             }
             return result;
         };
