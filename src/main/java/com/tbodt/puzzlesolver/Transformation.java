@@ -11,11 +11,5 @@ import java.util.stream.Stream;
  * An input transformation.
  */
 public interface Transformation {
-    /**
-     * Transforms the given string.
-     *
-     * @param data the string to transform
-     * @return a list of strings to replace the given string with
-     */
     Stream<String> transform(Stream<String> data);
 }
