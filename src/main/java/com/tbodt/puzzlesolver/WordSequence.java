@@ -119,11 +119,10 @@ public final class WordSequence implements Iterable<WordSequence.Word> {
         return ws -> {
             Stream<WordSequence> result = null;
             for (Word word : ws) {
-                Stream<Word> transformed = function.apply(word);
                 if (result == null)
-                    result = transformed.map(WordSequence::new);
+                    result = function.apply(word).map(WordSequence::new);
                 else
-                    result = result.flatMap(seq -> transformed.map(w -> seq.append(w)));
+                    result = result.flatMap(seq -> function.apply(word).map(w -> seq.append(w)));
             }
             return result;
         };
