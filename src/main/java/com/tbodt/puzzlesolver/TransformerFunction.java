@@ -14,15 +14,15 @@ import java.util.stream.Stream;
  *
  * @author Theodore Dubois
  */
-public class Function {
+public class TransformerFunction {
     private Map<List<ArgumentType>, Lambda> overloadings;
-    private static final Map<String, Function> functions = new HashMap<>();
+    private static final Map<String, TransformerFunction> functions = new HashMap<>();
 
     static {
-        functions.put("distinct", new Function(Functions::distinct));
-        functions.put("unique", new Function(Functions::distinct));
-        functions.put("uniq", new Function(Functions::distinct));
-        functions.put("anagram", new Function(Functions::anagram));
+        functions.put("distinct", new TransformerFunction(Functions::distinct));
+        functions.put("unique", new TransformerFunction(Functions::distinct));
+        functions.put("uniq", new TransformerFunction(Functions::distinct));
+        functions.put("anagram", new TransformerFunction(Functions::anagram));
     }
 
     public enum ArgumentType {
@@ -45,15 +45,15 @@ public class Function {
 
     }
 
-    private Function(Lambda lambda, ArgumentType... argTypes) {
+    private TransformerFunction(Lambda lambda, ArgumentType... argTypes) {
         this(Collections.singletonMap(Arrays.asList(argTypes), lambda));
     }
 
-    private Function(Map<List<ArgumentType>, Lambda> overloadings) {
+    private TransformerFunction(Map<List<ArgumentType>, Lambda> overloadings) {
         this.overloadings = Collections.unmodifiableMap(overloadings);
     }
 
-    public static Function forName(String name) {
+    public static TransformerFunction forName(String name) {
         return functions.get(name);
     }
 
