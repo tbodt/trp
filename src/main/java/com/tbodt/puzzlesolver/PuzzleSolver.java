@@ -22,7 +22,7 @@ public class PuzzleSolver {
 
     public static void main(String[] args) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print(">>> ");
+        System.out.print("trp> ");
         String input = in.readLine();
         while (input != null) {
             errors = false;
