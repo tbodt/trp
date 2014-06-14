@@ -73,7 +73,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
         String name = ctx.FUNC().getText();
         List<Object> args = new ArrayList<>(ctx.value());
         args = args.stream().map(vctx -> values.get((ParseTree) vctx)).collect(Collectors.toList());
-        Function fun = Function.forName(name);
+        TransformerFunction fun = TransformerFunction.forName(name);
         if (fun == null) {
             errListener.syntaxError(null, null, 0, 0, "no function with name " + name, null);
             return;
@@ -82,7 +82,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
             errListener.syntaxError(null, null, 0, 0, "arguments " + args + " invalid", null);
             return;
         }
-        transformations.add(new FunctionTransformation(Function.forName(name), args));
+        transformations.add(new FunctionTransformation(TransformerFunction.forName(name), args));
     }
 
     private static String stripEnds(String str) {

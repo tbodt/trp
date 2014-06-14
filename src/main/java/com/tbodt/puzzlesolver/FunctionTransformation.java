@@ -14,10 +14,10 @@ import java.util.stream.Stream;
  * @author Theodore Dubois
  */
 public class FunctionTransformation implements Transformation {
-    private final Function func;
+    private final TransformerFunction func;
     private final List<Object> args;
 
-    public FunctionTransformation(Function func, List<Object> args) {
+    public FunctionTransformation(TransformerFunction func, List<Object> args) {
         this.func = func;
         this.args = args;
     }
