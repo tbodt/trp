@@ -7,7 +7,6 @@ package com.tbodt.puzzlesolver;
 
 import com.tbodt.puzzlesolver.WordSequence.Word;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -15,41 +14,31 @@ import java.util.stream.Stream;
  * @author Theodore Dubois
  */
 public class TransformerFunction {
-    private Map<List<ArgumentType>, Lambda> overloadings;
+    private Map<ArgumentList, Transformer> overloadings;
     private static final Map<String, TransformerFunction> functions = new HashMap<>();
 
     static {
-        functions.put("distinct", new TransformerFunction(Functions::distinct));
-        functions.put("unique", new TransformerFunction(Functions::distinct));
-        functions.put("uniq", new TransformerFunction(Functions::distinct));
-        functions.put("anagram", new TransformerFunction(Functions::anagram));
-    }
-
-    public enum ArgumentType {
-        INTEGER, STRING;
-
-        public static ArgumentType typeOf(Object arg) {
-            if (arg.getClass() == Integer.class)
-                return INTEGER;
-            else if (arg.getClass() == String.class)
-                return STRING;
-            else
-                throw new IllegalArgumentException("invalid argument type " + arg);
-        }
-
+        functions.put("distinct", new TransformerFunction(Transformers::distinct));
+        functions.put("unique", new TransformerFunction(Transformers::distinct));
+        functions.put("uniq", new TransformerFunction(Transformers::distinct));
+        functions.put("anagram", new TransformerFunction(Transformers::anagram));
     }
 
     @FunctionalInterface
-    public interface Lambda {
+    public interface Transformer {
         Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] parameters);
 
     }
-
-    private TransformerFunction(Lambda lambda, ArgumentType... argTypes) {
-        this(Collections.singletonMap(Arrays.asList(argTypes), lambda));
+    
+    private TransformerFunction(Transformer lambda) {
+        this(lambda, new ArgumentList());
     }
 
-    private TransformerFunction(Map<List<ArgumentType>, Lambda> overloadings) {
+    private TransformerFunction(Transformer lambda, ArgumentList argTypes) {
+        this(Collections.singletonMap(argTypes, lambda));
+    }
+
+    private TransformerFunction(Map<ArgumentList, Transformer> overloadings) {
         this.overloadings = Collections.unmodifiableMap(overloadings);
     }
 
@@ -58,24 +47,24 @@ public class TransformerFunction {
     }
 
     public boolean isValidArguments(Object[] args) {
-        List<ArgumentType> argTypes = Arrays.stream(args).map(ArgumentType::typeOf).collect(Collectors.toList());
+        ArgumentList argTypes = ArgumentList.of(args);
         return overloadings.containsKey(argTypes);
     }
 
     public Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] args) {
-        List<ArgumentType> argTypes = Arrays.stream(args).map(ArgumentType::typeOf).collect(Collectors.toList());
+        ArgumentList argTypes = ArgumentList.of(args);
         if (!overloadings.containsKey(argTypes))
             throw new IllegalArgumentException("nonexistent overloading");
         return overloadings.get(argTypes).invoke(data, args);
     }
 
-    private static final class Functions {
+    private static final class Transformers {
         public static Stream<WordSequence> distinct(Stream<WordSequence> data, Object[] parameters) {
             return data.distinct();
         }
 
         public static Stream<WordSequence> anagram(Stream<WordSequence> data, Object[] parameters) {
-            return data.unordered().flatMap(WordSequence.forEachWord(Functions::allAnagrams)).distinct();
+            return data.unordered().flatMap(WordSequence.forEachWord(Transformers::allAnagrams)).distinct();
         }
 
         private static Stream<Word> allAnagrams(Word data) {
@@ -90,7 +79,7 @@ public class TransformerFunction {
             return ret;
         }
 
-        private Functions() {
+        private Transformers() {
         }
     }
 }
