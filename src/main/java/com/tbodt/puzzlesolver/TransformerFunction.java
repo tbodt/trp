@@ -109,8 +109,8 @@ public class TransformerFunction {
                 }
             }
             return data.flatMap(WordSequence.forEachWord(w -> StreamSupport.stream(
-                    Spliterators.spliterator(
-                            new AnagramIterator(w), Long.MAX_VALUE,
+                    Spliterators.spliteratorUnknownSize(
+                            new AnagramIterator(w),
                             Spliterator.DISTINCT + Spliterator.IMMUTABLE + Spliterator.NONNULL),
                     false)));
         }
