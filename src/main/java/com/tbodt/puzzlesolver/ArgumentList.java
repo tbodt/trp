@@ -19,7 +19,11 @@ public final class ArgumentList {
     public ArgumentList(ArgumentType... argTypes) {
         this(Arrays.asList(argTypes));
     }
-    
+
+    public ArgumentList(boolean varargs, ArgumentType... argTypes) {
+        this(Arrays.asList(argTypes), varargs);
+    }
+
     public ArgumentList(List<ArgumentType> argTypes) {
         this(argTypes, false);
     }
@@ -44,7 +48,12 @@ public final class ArgumentList {
     }
 
     public static ArgumentList of(Object[] args) {
-        return new ArgumentList(Arrays.stream(args).map(ArgumentType::typeOf).collect(Collectors.toList()));
+        return new ArgumentList(Arrays.stream(args).map(ArgumentType::typeOf).collect(
+                Collectors.toList()));
+    }
+
+    public List<ArgumentType> getArgumentTypes() {
+        return Collections.unmodifiableList(argTypes);
     }
 
     @Override
@@ -52,9 +61,16 @@ public final class ArgumentList {
         if (!(obj instanceof ArgumentList))
             return false;
         final ArgumentList other = (ArgumentList) obj;
-        if (!varargs && !other.varargs)
+        if (varargs == other.varargs)
             return argTypes.equals(other.argTypes);
-        return false; // varargs are not completely supported yet
+        if (!varargs)
+            return other.equals(this);
+        ArgumentType varargType = getArgumentTypes().get(getArgumentTypes().size() - 1);
+        List<ArgumentType> list = new ArrayList<>(other.getArgumentTypes());
+        while (list.get(list.size() - 1).equals(varargType))
+            list.remove(list.size() - 1);
+        list.add(varargType);
+        return list.equals(getArgumentTypes());
     }
 
     @Override
