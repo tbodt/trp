@@ -19,9 +19,6 @@ public class TransformerFunction {
     private static final Map<String, TransformerFunction> functions = new HashMap<>();
 
     static {
-        functions.put("distinct", new TransformerFunction(Transformers::distinct));
-        functions.put("unique", new TransformerFunction(Transformers::distinct));
-        functions.put("uniq", new TransformerFunction(Transformers::distinct));
         functions.put("anagram", new TransformerFunction(Transformers::anagram));
     }
 
@@ -60,10 +57,6 @@ public class TransformerFunction {
     }
 
     private static final class Transformers {
-        public static Stream<WordSequence> distinct(Stream<WordSequence> data, Object[] parameters) {
-            return data.distinct();
-        }
-
         public static Stream<WordSequence> anagram(Stream<WordSequence> data, Object[] parameters) {
             class AnagramIterator implements Iterator<Word> {
                 private final Word start;
