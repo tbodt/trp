@@ -37,7 +37,9 @@ public class PuzzleSolver {
                 }
 
             };
+            parser.removeErrorListeners();
             parser.addErrorListener(errListener);
+            lexer.removeErrorListeners();
             lexer.addErrorListener(errListener);
             ParseTree tree = parser.puzzle();
             ParseTreeWalker walker = new ParseTreeWalker();
