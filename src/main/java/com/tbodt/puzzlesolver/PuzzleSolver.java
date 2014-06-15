@@ -50,7 +50,7 @@ public class PuzzleSolver {
                 dataStream.forEach(System.out::println);
             }
             System.gc(); // why not?
-            System.out.print(">>> ");
+            System.out.print("trp> ");
             input = in.readLine();
         }
     }
