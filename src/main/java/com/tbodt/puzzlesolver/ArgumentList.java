@@ -67,7 +67,7 @@ public final class ArgumentList {
             return other.equals(this);
         ArgumentType varargType = getArgumentTypes().get(getArgumentTypes().size() - 1);
         List<ArgumentType> list = new ArrayList<>(other.getArgumentTypes());
-        while (list.get(list.size() - 1).equals(varargType))
+        while (list.size() > 0 && list.get(list.size() - 1).equals(varargType))
             list.remove(list.size() - 1);
         list.add(varargType);
         return list.equals(getArgumentTypes());
