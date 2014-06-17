@@ -5,10 +5,6 @@
  */
 package com.tbodt.puzzlesolver;
 
-import com.tbodt.trp.PuzzleParser.CategoryDataContext;
-import com.tbodt.trp.PuzzleParser.CategoryTransformationContext;
-import com.tbodt.trp.PuzzleParser.FunctionTransformationContext;
-import com.tbodt.trp.PuzzleParser.StringDataContext;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ANTLRErrorListener;
@@ -32,12 +28,12 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     }
 
     @Override
-    public void exitStringData(StringDataContext ctx) {
+    public void exitStringData(PuzzleParser.StringDataContext ctx) {
         data.add(new WordSequence(stripEnds(ctx.STRING().getText())));
     }
 
     @Override
-    public void exitCategoryData(CategoryDataContext ctx) {
+    public void exitCategoryData(PuzzleParser.CategoryDataContext ctx) {
         String catName = stripEnds(ctx.CATEGORY().getText());
         Category cat = Category.forName(catName);
         if (cat == null) {
@@ -48,7 +44,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     }
 
     @Override
-    public void exitCategoryTransformation(CategoryTransformationContext ctx) {
+    public void exitCategoryTransformation(PuzzleParser.CategoryTransformationContext ctx) {
         String catName = stripEnds(ctx.CATEGORY().getText());
         Category cat = Category.forName(catName);
         if (cat == null) {
@@ -69,7 +65,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     }
 
     @Override
-    public void exitFunctionTransformation(FunctionTransformationContext ctx) {
+    public void exitFunctionTransformation(PuzzleParser.FunctionTransformationContext ctx) {
         String name = ctx.FUNC().getText();
         List<Object> args = new ArrayList<>(ctx.value());
         args = args.stream().map(vctx -> values.get((ParseTree) vctx)).collect(Collectors.toList());
