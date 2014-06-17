@@ -5,10 +5,10 @@
  */
 package com.tbodt.puzzlesolver;
 
-import com.tbodt.puzzlesolver.PuzzleParser.CategoryDataContext;
-import com.tbodt.puzzlesolver.PuzzleParser.CategoryTransformationContext;
-import com.tbodt.puzzlesolver.PuzzleParser.FunctionTransformationContext;
-import com.tbodt.puzzlesolver.PuzzleParser.StringDataContext;
+import com.tbodt.trp.PuzzleParser.CategoryDataContext;
+import com.tbodt.trp.PuzzleParser.CategoryTransformationContext;
+import com.tbodt.trp.PuzzleParser.FunctionTransformationContext;
+import com.tbodt.trp.PuzzleParser.StringDataContext;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ANTLRErrorListener;
