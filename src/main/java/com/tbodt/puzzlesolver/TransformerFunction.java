@@ -80,7 +80,7 @@ public class TransformerFunction {
                     for (int i = b.length() - 1; i > 0; i--)
                         if (b.charAt(i - 1) < b.charAt(i)) {
                             int j = b.length() - 1;
-                            while (b.charAt(i - 1) > b.charAt(j))
+                            while (b.charAt(i - 1) >= b.charAt(j))
                                 j--;
                             swap(b, i - 1, j);
                             reverse(b, i);
