@@ -20,6 +20,8 @@ public class TransformerFunction {
 
     static {
         functions.put("anagram", new TransformerFunction(Transformers::anagram));
+        functions.put("splitWords", new TransformerFunction(Transformers::splitWords,
+                new ArgumentList(true, ArgumentList.ArgumentType.INTEGER)));
     }
 
     @FunctionalInterface
@@ -113,6 +115,24 @@ public class TransformerFunction {
                             new AnagramIterator(w),
                             Spliterator.DISTINCT + Spliterator.IMMUTABLE + Spliterator.NONNULL),
                     false)));
+        }
+
+        public static Stream<WordSequence> splitWords(Stream<WordSequence> data, Object[] args) {
+            int[] wordLengths = Arrays.stream(args).mapToInt(a -> (Integer) a).toArray();
+            int wordLengthSum = Arrays.stream(wordLengths).sum();
+            return data.filter(ws -> ws.getWords().size() == 1)
+                    .filter(ws -> ws.getWords().stream().mapToInt(Word::length).sum() == wordLengthSum)
+                    .map(ws -> ws.getWords().get(0))
+                    .map(w -> {
+                        String str = w.toString();
+                        List<Word> words = new ArrayList<>();
+                        for (int wordLength : wordLengths) {
+                            String word = str.substring(0, wordLength);
+                            str = str.substring(wordLength);
+                            words.add(new Word(word));
+                        }
+                        return new WordSequence(words);
+                    });
         }
 
         private Transformers() {
