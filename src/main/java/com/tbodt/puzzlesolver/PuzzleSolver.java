@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 /**
- * Main class for the Puzzle Solver.
+ * Main class for The Rapid Permuter.
  *
  * @author Theodore Dubois
  */
@@ -20,6 +20,12 @@ public class PuzzleSolver {
 
     private static boolean errors;
 
+    /**
+     * Main method for The Rapid Permuter.
+     * 
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("trp> ");

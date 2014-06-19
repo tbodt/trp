@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * A list of the types of arguments to a function.
  *
  * @author Theodore Dubois
  */
@@ -16,26 +17,66 @@ public final class ArgumentList {
     private final List<ArgumentType> argTypes;
     private final boolean varargs; // the last argument may be repeated
 
+    /**
+     * Constructs an {@code ArgumentList} from the given list of {@code ArgumentType}s.
+     *
+     * @param argTypes the types of arguments
+     */
     public ArgumentList(ArgumentType... argTypes) {
         this(Arrays.asList(argTypes));
     }
 
+    /**
+     * Constructs an {@code ArgumentList} from the given list of {@code ArgumentType}s and whether
+     * the last argument may be repeated zero or more times.
+     *
+     * @param argTypes the types of arguments
+     * @param varargs whether the last argument may be repeated zero or more times
+     */
     public ArgumentList(boolean varargs, ArgumentType... argTypes) {
         this(Arrays.asList(argTypes), varargs);
     }
 
+    /**
+     * Constructs an {@code ArgumentList} from the given list of {@code ArgumentType}s.
+     *
+     * @param argTypes the types of arguments
+     */
     public ArgumentList(List<ArgumentType> argTypes) {
         this(argTypes, false);
     }
 
+    /**
+     * Constructs an {@code ArgumentList} from the given list of {@code ArgumentType}s and whether
+     * the last argument may be repeated zero or more times.
+     *
+     * @param argTypes the types of arguments
+     * @param varargs whether the last argument may be repeated zero or more times
+     */
     public ArgumentList(List<ArgumentType> argTypes, boolean varargs) {
         this.argTypes = Collections.unmodifiableList(argTypes);
         this.varargs = varargs;
     }
 
+    /**
+     * The type of a function argument, either an integer or a string.
+     */
     public static enum ArgumentType {
-        INTEGER, STRING;
+        /**
+         * An integer argument type.
+         */
+        INTEGER,
+        /**
+         * A string argument type.
+         */
+        STRING;
 
+        /**
+         * The {@code ArgumentType} corresponding to the given object.
+         *
+         * @param arg the given object
+         * @return the {@code ArgumentType} corresponding to the given object
+         */
         public static ArgumentType typeOf(Object arg) {
             if (arg.getClass() == Integer.class)
                 return INTEGER;
@@ -47,11 +88,22 @@ public final class ArgumentList {
 
     }
 
+    /**
+     * An argument list for the array of objects passed.
+     *
+     * @param args an array of objects
+     * @return an argument list for the array of objects passed
+     */
     public static ArgumentList of(Object[] args) {
         return new ArgumentList(Arrays.stream(args).map(ArgumentType::typeOf).collect(
                 Collectors.toList()));
     }
 
+    /**
+     * Returns the list of {@code ArgumentType}s that this {@code ArgumentList} represents.
+     *
+     * @return the list of {@code ArgumentType}s that this {@code ArgumentList} represents
+     */
     public List<ArgumentType> getArgumentTypes() {
         return Collections.unmodifiableList(argTypes);
     }

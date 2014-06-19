@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeProperty;
 
 /**
+ * A parse tree listener for The Rapid Permuter.
  *
  * @author Theodore Dubois
  */
@@ -23,6 +24,12 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     private final ParseTreeProperty<Object> values = new ParseTreeProperty<>();
     private final ANTLRErrorListener errListener;
 
+    /**
+     * Constructs a {@code PuzzleParseListener} that outputs error messages to the given error
+     * listener.
+     *
+     * @param errListener the error listener.
+     */
     public PuzzleParseListener(ANTLRErrorListener errListener) {
         this.errListener = errListener;
     }
@@ -85,10 +92,20 @@ public class PuzzleParseListener extends PuzzleBaseListener {
         return str.substring(1, str.length() - 1);
     }
 
+    /**
+     * Returns the data set described by the input this parse tree listener heard.
+     *
+     * @return the data set described by the input this parse tree listener heard.
+     */
     public Set<WordSequence> getData() {
         return Collections.unmodifiableSet(data);
     }
 
+    /**
+     * Returns the transformations described by the input this parse tree listener heard.
+     *
+     * @return the transformations described by the input this parse tree listener heard.
+     */
     public List<Transformation> getTransformations() {
         return Collections.unmodifiableList(transformations);
     }
