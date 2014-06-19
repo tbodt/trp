@@ -8,7 +8,7 @@ package com.tbodt.puzzlesolver;
 import java.util.stream.Stream;
 
 /**
- * A transformation that filters out words  not in a category.
+ * A transformation that filters out words not in a category.
  */
 public class CategoryTransformation implements Transformation {
     private final Category category;

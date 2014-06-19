@@ -11,7 +11,8 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- *
+ * A function that transforms a data stream.
+ * 
  * @author Theodore Dubois
  */
 public class TransformerFunction {
@@ -24,10 +25,19 @@ public class TransformerFunction {
                 new ArgumentList(true, ArgumentList.ArgumentType.INTEGER)));
     }
 
+    /**
+     * A {@code FunctionalInterface} that describes a transformer function.
+     */
     @FunctionalInterface
     public interface Transformer {
-        Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] parameters);
 
+        /**
+         * Invokes the transformer.
+         * @param data the data to transform
+         * @param parameters the parameters
+         * @return the transformed stream
+         */
+        Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] parameters);
     }
 
     private TransformerFunction(Transformer lambda) {
@@ -42,6 +52,11 @@ public class TransformerFunction {
         this.overloadings = Collections.unmodifiableMap(overloadings);
     }
 
+    /**
+     * Returns the {@code TransformerFunction} with the given name.
+     * @param name the name
+     * @return {@code TransformerFunction} with the given name
+     */
     public static TransformerFunction forName(String name) {
         return functions.get(name);
     }

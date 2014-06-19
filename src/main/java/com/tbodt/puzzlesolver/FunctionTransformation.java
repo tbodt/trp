@@ -17,6 +17,12 @@ public class FunctionTransformation implements Transformation {
     private final TransformerFunction func;
     private final List<Object> args;
 
+    /**
+     * Constructs an {@code FunctionTransformation} that transforms based on the
+     * specified {@code func} and passes it the {@code args}.
+     * @param func the function to use for the transformation
+     * @param args the arguments to pass to the function
+     */
     public FunctionTransformation(TransformerFunction func, List<Object> args) {
         this.func = func;
         this.args = args;
