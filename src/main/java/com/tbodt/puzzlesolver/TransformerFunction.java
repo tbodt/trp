@@ -12,7 +12,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * A function that transforms a data stream.
- * 
+ *
  * @author Theodore Dubois
  */
 public class TransformerFunction {
@@ -30,9 +30,9 @@ public class TransformerFunction {
      */
     @FunctionalInterface
     public interface Transformer {
-
         /**
          * Invokes the transformer.
+         *
          * @param data the data to transform
          * @param parameters the parameters
          * @return the transformed stream
@@ -54,6 +54,7 @@ public class TransformerFunction {
 
     /**
      * Returns the {@code TransformerFunction} with the given name.
+     *
      * @param name the name
      * @return {@code TransformerFunction} with the given name
      */
@@ -61,11 +62,26 @@ public class TransformerFunction {
         return functions.get(name);
     }
 
+    /**
+     * Whether the arguments specified would be valid to pass to the
+     * {@link TransformerFunction#invoke} method.
+     *
+     * @param args the arguments
+     * @return whether the arguments specified would be valid to pass to the
+     * {@link TransformerFunction#invoke} method
+     */
     public boolean isValidArguments(Object[] args) {
         ArgumentList argTypes = ArgumentList.of(args);
         return overloadings.containsKey(argTypes);
     }
 
+    /**
+     * Invoke the transformer function.
+     *
+     * @param data the data to transform
+     * @param args the arguments to the function
+     * @return the result of the function transforming {@code data}
+     */
     public Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] args) {
         ArgumentList argTypes = ArgumentList.of(args);
         if (!overloadings.containsKey(argTypes))

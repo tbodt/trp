@@ -27,6 +27,12 @@ public class Category {
         }
     }
 
+    /**
+     * Returns the category with the given name.
+     *
+     * @param name the name
+     * @return the category with the given name
+     */
     public static Category forName(String name) {
         if (Category.class.getResource(name) == null)
             return null;
@@ -37,6 +43,11 @@ public class Category {
         return c;
     }
 
+    /**
+     * Returns all items in the category.
+     *
+     * @return all items in the category
+     */
     public Set<WordSequence> getItems() {
         return Collections.unmodifiableSet(items);
     }
