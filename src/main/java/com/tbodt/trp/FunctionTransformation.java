@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.tbodt.puzzlesolver;
+package com.tbodt.trp;
 
 import java.util.List;
 import java.util.stream.Stream;

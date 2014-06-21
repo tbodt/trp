@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tbodt.puzzlesolver;
+package com.tbodt.trp;
 
+import com.tbodt.puzzlesolver.PuzzleBaseListener;
+import com.tbodt.puzzlesolver.PuzzleParser;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ANTLRErrorListener;

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tbodt.puzzlesolver;
+package com.tbodt.trp;
 
-import com.tbodt.puzzlesolver.WordSequence.Word;
+import com.tbodt.trp.WordSequence.Word;
 import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;

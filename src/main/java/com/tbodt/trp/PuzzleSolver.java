@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.tbodt.puzzlesolver;
+package com.tbodt.trp;
 
 import java.io.*;
 import java.util.stream.Stream;
