@@ -89,7 +89,7 @@ public final class WordSequence implements Iterable<WordSequence.Word> {
         public Word(String word) {
             if (word.matches(".*\\s.*"))
                 throw new IllegalArgumentException("words do not contain whitespace");
-            this.word = word;
+            this.word = word.toLowerCase();
         }
 
         @Override
