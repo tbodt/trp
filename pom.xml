@@ -34,7 +34,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.tbodt.puzzlesolver.PuzzleSolver</mainClass>
+                            <mainClass>com.tbodt.trp.PuzzleSolver</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -46,7 +46,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.tbodt.puzzlesolver.PuzzleSolver</mainClass>
+                            <mainClass>com.tbodt.trp.PuzzleSolver</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -75,7 +75,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.tbodt.puzzlesolver.PuzzleSolver</mainClass>
+                    <mainClass>com.tbodt.trp.PuzzleSolver</mainClass>
                 </configuration>
             </plugin>
             <plugin>
