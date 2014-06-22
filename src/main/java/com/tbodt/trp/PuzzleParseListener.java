@@ -5,8 +5,6 @@
  */
 package com.tbodt.trp;
 
-import com.tbodt.puzzlesolver.PuzzleBaseListener;
-import com.tbodt.puzzlesolver.PuzzleParser;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ANTLRErrorListener;
