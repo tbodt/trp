@@ -20,7 +20,7 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
 public class PuzzleParseListener extends PuzzleBaseListener {
 
     private final Set<WordSequence> data = new HashSet<>();
-    private final List<Transformation> transformations = new ArrayList<>();
+    private final List<Transformer> transformations = new ArrayList<>();
     private final ParseTreeProperty<Object> values = new ParseTreeProperty<>();
     private final ANTLRErrorListener errListener;
 
@@ -106,7 +106,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
      *
      * @return the transformations described by the input this parse tree listener heard.
      */
-    public List<Transformation> getTransformations() {
+    public List<Transformer> getTransformations() {
         return Collections.unmodifiableList(transformations);
     }
 

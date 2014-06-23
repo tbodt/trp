@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  * A transformation that transforms based on a {@code Function}.
  * @author Theodore Dubois
  */
-public class FunctionTransformation implements Transformation {
+public class FunctionTransformation implements Transformer {
     private final TransformerFunction func;
     private final List<Object> args;
 

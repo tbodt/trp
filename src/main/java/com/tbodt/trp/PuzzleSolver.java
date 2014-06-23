@@ -53,7 +53,7 @@ public class PuzzleSolver {
             walker.walk(listener, tree);
             if (errors == false) {
                 Stream<WordSequence> dataStream = listener.getData().parallelStream();
-                for (Transformation tx : listener.getTransformations())
+                for (Transformer tx : listener.getTransformations())
                     dataStream = tx.transform(dataStream).unordered();
                 dataStream.forEach(System.out::println);
             }

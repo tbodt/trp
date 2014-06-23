@@ -6,7 +6,7 @@ grammar Puzzle;
 /**
  * A rule describing the whole puzzle.
  */
-puzzle: data+ ':' transformation* EOF;
+puzzle: data+ (':' transformation*)? EOF;
 /**
  * A rule describing data that will be transformed.
  */
@@ -24,8 +24,9 @@ transformation
  * A rule describing a value, i.e. a function argument.
  */
 value
-    : INT       # IntValue
-    | STRING    # StringValue
+    : INT               # IntValue
+    | STRING            # StringValue
+    | transformation    # TransformationValue
     ;
 
 STRING : '"' ~["]* '"' ;

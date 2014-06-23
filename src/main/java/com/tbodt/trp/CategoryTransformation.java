@@ -5,12 +5,10 @@
  */
 package com.tbodt.trp;
 
-import java.util.stream.Stream;
-
 /**
  * A transformation that filters out words not in a category.
  */
-public class CategoryTransformation implements Transformation {
+public class CategoryTransformation implements Filter {
     private final Category category;
 
     /**
@@ -22,8 +20,7 @@ public class CategoryTransformation implements Transformation {
     }
 
     @Override
-    public Stream<WordSequence> transform(Stream<WordSequence> data) {
-        return data.filter(datum -> category.getItems().contains(datum));
+    public boolean test(WordSequence ws) {
+        return category.getItems().contains(ws);
     }
-
 }

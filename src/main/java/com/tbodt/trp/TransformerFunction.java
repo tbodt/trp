@@ -16,20 +16,21 @@ import java.util.stream.StreamSupport;
  * @author Theodore Dubois
  */
 public class TransformerFunction {
-    private Map<ArgumentList, Transformer> overloadings;
+    private Map<ArgumentList, Lambda> overloadings;
     private static final Map<String, TransformerFunction> functions = new HashMap<>();
 
     static {
         functions.put("anagram", new TransformerFunction(Transformers::anagram));
         functions.put("splitWords", new TransformerFunction(Transformers::splitWords,
                 new ArgumentList(true, ArgumentList.ArgumentType.INTEGER)));
+        functions.put("anyWords", new TransformerFunction(Transformers::anyWords));
     }
 
     /**
      * A {@code FunctionalInterface} that describes a transformer function.
      */
     @FunctionalInterface
-    public interface Transformer {
+    public interface Lambda {
         /**
          * Invokes the transformer.
          *
@@ -40,15 +41,15 @@ public class TransformerFunction {
         Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] parameters);
     }
 
-    private TransformerFunction(Transformer lambda) {
+    private TransformerFunction(Lambda lambda) {
         this(lambda, new ArgumentList());
     }
 
-    private TransformerFunction(Transformer lambda, ArgumentList argTypes) {
+    private TransformerFunction(Lambda lambda, ArgumentList argTypes) {
         this(Collections.singletonMap(argTypes, lambda));
     }
 
-    private TransformerFunction(Map<ArgumentList, Transformer> overloadings) {
+    protected TransformerFunction(Map<ArgumentList, Lambda> overloadings) {
         this.overloadings = Collections.unmodifiableMap(overloadings);
     }
 
@@ -164,6 +165,10 @@ public class TransformerFunction {
                         }
                         return new WordSequence(words);
                     });
+        }
+        
+        public static Stream<WordSequence> anyWords(Stream<WordSequence> data, Object[] args) {
+            return data.filter(ws -> ws.getWords().stream().anyMatch(Category.forName("words").getItems()::contains));
         }
 
         private Transformers() {

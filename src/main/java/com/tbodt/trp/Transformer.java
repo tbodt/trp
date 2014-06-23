@@ -10,10 +10,10 @@ import java.util.stream.Stream;
 /**
  * An input transformation.
  */
-public interface Transformation {
-
+public interface Transformer {
     /**
      * Apply a series of intermediate operations on {@code data} and return the result.
+     *
      * @param data the data to transform
      * @return the result of the transformation
      */
