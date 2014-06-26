@@ -49,6 +49,10 @@ public class TransformerFunction {
         this(Collections.singletonMap(argTypes, lambda));
     }
 
+    /**
+     * 
+     * @param overloadings
+     */
     protected TransformerFunction(Map<ArgumentList, Lambda> overloadings) {
         this.overloadings = Collections.unmodifiableMap(overloadings);
     }
@@ -60,7 +64,10 @@ public class TransformerFunction {
      * @return {@code TransformerFunction} with the given name
      */
     public static TransformerFunction forName(String name) {
-        return functions.get(name);
+        if (functions.containsKey(name))
+            return functions.get(name);
+        else
+            return FilterFunction.forName(name);
     }
 
     /**
@@ -90,6 +97,13 @@ public class TransformerFunction {
         return overloadings.get(argTypes).invoke(data, args);
     }
 
+    protected Lambda lambdaForArgs(Object[] args) {
+        ArgumentList argTypes = ArgumentList.of(args);
+        if (!overloadings.containsKey(argTypes))
+            throw new IllegalArgumentException("nonexistent overloading");
+        return overloadings.get(argTypes);
+    }
+    
     private static final class Transformers {
         public static Stream<WordSequence> anagram(Stream<WordSequence> data, Object[] parameters) {
             class AnagramIterator implements Iterator<Word> {
