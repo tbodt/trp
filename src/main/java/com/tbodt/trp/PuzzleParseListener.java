@@ -5,6 +5,8 @@
  */
 package com.tbodt.trp;
 
+import com.tbodt.jstack.ArrayStack;
+import com.tbodt.jstack.Stack;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.ANTLRErrorListener;
@@ -20,7 +22,7 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
 public class PuzzleParseListener extends PuzzleBaseListener {
 
     private final Set<WordSequence> data = new HashSet<>();
-    private final List<Transformer> transformations = new ArrayList<>();
+    private final Stack<List<Transformer>> transformations = new ArrayStack<>();
     private final ParseTreeProperty<Object> values = new ParseTreeProperty<>();
     private final ANTLRErrorListener errListener;
 
@@ -32,6 +34,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
      */
     public PuzzleParseListener(ANTLRErrorListener errListener) {
         this.errListener = errListener;
+        transformations.push(new ArrayList<>());
     }
 
     @Override
@@ -58,7 +61,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
             errListener.syntaxError(null, null, 0, 0, "nonexistent category " + catName, null);
             return;
         }
-        transformations.add(new CategoryTransformation(cat));
+        transformations.peek().add(new CategoryTransformation(cat));
     }
 
     @Override
@@ -69,6 +72,16 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     @Override
     public void exitStringValue(PuzzleParser.StringValueContext ctx) {
         values.put(ctx, ctx.STRING().getText());
+    }
+
+    @Override
+    public void enterTransformationValue(PuzzleParser.TransformationValueContext ctx) {
+        transformations.push(new ArrayList<>());
+    }
+
+    @Override
+    public void exitTransformationValue(PuzzleParser.TransformationValueContext ctx) {
+        values.put(ctx, transformations.pop());
     }
 
     @Override
@@ -85,7 +98,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
             errListener.syntaxError(null, null, 0, 0, "arguments " + args + " invalid", null);
             return;
         }
-        transformations.add(new FunctionTransformation(TransformerFunction.forName(name), args));
+        transformations.peek().add(new FunctionTransformation(TransformerFunction.forName(name), args));
     }
 
     private static String stripEnds(String str) {
@@ -107,7 +120,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
      * @return the transformations described by the input this parse tree listener heard.
      */
     public List<Transformer> getTransformations() {
-        return Collections.unmodifiableList(transformations);
+        return Collections.unmodifiableList(transformations.peek());
     }
 
 }

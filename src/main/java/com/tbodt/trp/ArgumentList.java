@@ -69,7 +69,15 @@ public final class ArgumentList {
         /**
          * A string argument type.
          */
-        STRING;
+        STRING,
+        /**
+         * A transformer argument type.
+         */
+        TRANSFORMER,
+        /**
+         * A filter argument type.
+         */
+        FILTER;
 
         /**
          * The {@code ArgumentType} corresponding to the given object.
@@ -82,6 +90,10 @@ public final class ArgumentList {
                 return INTEGER;
             else if (arg.getClass() == String.class)
                 return STRING;
+            else if (arg.getClass() == Transformer.class)
+                return TRANSFORMER;
+            else if (arg.getClass() == Filter.class)
+                return FILTER;
             else
                 throw new IllegalArgumentException("invalid argument type " + arg);
         }
@@ -114,7 +126,7 @@ public final class ArgumentList {
             return false;
         final ArgumentList other = (ArgumentList) obj;
         if (varargs == other.varargs)
-            return argTypes.equals(other.argTypes);
+            return argumentListsEqual(argTypes, other.argTypes);
         if (!varargs)
             return other.equals(this);
         ArgumentType varargType = getArgumentTypes().get(getArgumentTypes().size() - 1);
@@ -122,7 +134,11 @@ public final class ArgumentList {
         while (list.size() > 0 && list.get(list.size() - 1).equals(varargType))
             list.remove(list.size() - 1);
         list.add(varargType);
-        return list.equals(getArgumentTypes());
+        return argumentListsEqual(list, argTypes);
+    }
+    
+    private static boolean argumentListsEqual(List<ArgumentType> a, List<ArgumentType> b) {
+        return a.equals(b); // for now
     }
 
     @Override
