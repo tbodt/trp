@@ -5,7 +5,6 @@
  */
 package com.tbodt.trp;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -13,7 +12,7 @@ import java.util.stream.Stream;
  *
  * @author theodore
  */
-public class FilterTransformation extends FunctionTransformation implements Filter {
+public class FilterTransformer extends FunctionTransformer implements Filter {
 
     /**
      * Constructs an {@code FilterTransformation} that transforms based on the specified
@@ -22,7 +21,7 @@ public class FilterTransformation extends FunctionTransformation implements Filt
      * @param func
      * @param args
      */
-    public FilterTransformation(FilterFunction func, List<Object> args) {
+    public FilterTransformer(FilterFunction func, ArgumentList args) {
         super(func, args);
     }
 
@@ -33,7 +32,7 @@ public class FilterTransformation extends FunctionTransformation implements Filt
 
     @Override
     public boolean test(WordSequence t) {
-        return getFunction().invoke(t, getArguments().toArray());
+        return getFunction().invoke(t, getArguments());
     }
 
     @Override

@@ -87,18 +87,19 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     @Override
     public void exitFunctionTransformation(PuzzleParser.FunctionTransformationContext ctx) {
         String name = ctx.FUNC().getText();
-        List<Object> args = new ArrayList<>(ctx.value());
-        args = args.stream().map(vctx -> values.get((ParseTree) vctx)).collect(Collectors.toList());
+        ArgumentList args = new ArgumentList(ctx.value().stream().map(vctx ->
+                values.get((ParseTree) vctx)).collect(Collectors.toList()));
         TransformerFunction fun = TransformerFunction.forName(name);
         if (fun == null) {
             errListener.syntaxError(null, null, 0, 0, "no function with name " + name, null);
             return;
         }
-        if (!fun.isValidArguments(args.toArray())) {
+        if (!fun.isValidArguments(args)) {
             errListener.syntaxError(null, null, 0, 0, "arguments " + args + " invalid", null);
             return;
         }
-        transformations.peek().add(new FunctionTransformation(TransformerFunction.forName(name), args));
+        transformations.peek()
+                .add(new FunctionTransformer(TransformerFunction.forName(name), args));
     }
 
     private static String stripEnds(String str) {

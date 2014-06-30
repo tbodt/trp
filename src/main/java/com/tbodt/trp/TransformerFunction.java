@@ -16,14 +16,13 @@ import java.util.stream.StreamSupport;
  * @author Theodore Dubois
  */
 public class TransformerFunction {
-    private Map<ArgumentList, Lambda> overloadings;
+    private Map<ArgumentTypeList, Lambda> overloadings;
     private static final Map<String, TransformerFunction> functions = new HashMap<>();
 
     static {
         functions.put("anagram", new TransformerFunction(Transformers::anagram));
         functions.put("splitWords", new TransformerFunction(Transformers::splitWords,
-                new ArgumentList(true, ArgumentList.ArgumentType.INTEGER)));
-        functions.put("anyWords", new TransformerFunction(Transformers::anyWords));
+                new ArgumentTypeList(true, ArgumentTypeList.ArgumentType.INTEGER)));
     }
 
     /**
@@ -38,22 +37,22 @@ public class TransformerFunction {
          * @param parameters the parameters
          * @return the transformed stream
          */
-        Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] parameters);
+        Stream<WordSequence> invoke(Stream<WordSequence> data, ArgumentList parameters);
     }
 
     private TransformerFunction(Lambda lambda) {
-        this(lambda, new ArgumentList());
+        this(lambda, new ArgumentTypeList());
     }
 
-    private TransformerFunction(Lambda lambda, ArgumentList argTypes) {
+    private TransformerFunction(Lambda lambda, ArgumentTypeList argTypes) {
         this(Collections.singletonMap(argTypes, lambda));
     }
 
     /**
-     * 
+     *
      * @param overloadings
      */
-    protected TransformerFunction(Map<ArgumentList, Lambda> overloadings) {
+    protected TransformerFunction(Map<ArgumentTypeList, Lambda> overloadings) {
         this.overloadings = Collections.unmodifiableMap(overloadings);
     }
 
@@ -78,9 +77,8 @@ public class TransformerFunction {
      * @return whether the arguments specified would be valid to pass to the
      * {@link TransformerFunction#invoke} method
      */
-    public boolean isValidArguments(Object[] args) {
-        ArgumentList argTypes = ArgumentList.of(args);
-        return overloadings.containsKey(argTypes);
+    public boolean isValidArguments(ArgumentList args) {
+        return overloadings.entrySet().stream().anyMatch(entry -> entry.getKey().matches(args));
     }
 
     /**
@@ -90,22 +88,18 @@ public class TransformerFunction {
      * @param args the arguments to the function
      * @return the result of the function transforming {@code data}
      */
-    public Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] args) {
-        ArgumentList argTypes = ArgumentList.of(args);
-        if (!overloadings.containsKey(argTypes))
-            throw new IllegalArgumentException("nonexistent overloading");
-        return overloadings.get(argTypes).invoke(data, args);
+    public Stream<WordSequence> invoke(Stream<WordSequence> data, ArgumentList args) {
+        return lambdaForArgs(args).invoke(data, args);
     }
 
-    protected Lambda lambdaForArgs(Object[] args) {
-        ArgumentList argTypes = ArgumentList.of(args);
-        if (!overloadings.containsKey(argTypes))
-            throw new IllegalArgumentException("nonexistent overloading");
-        return overloadings.get(argTypes);
+    protected Lambda lambdaForArgs(ArgumentList args) {
+        return overloadings.entrySet().stream().filter(entry -> entry.getKey().matches(args))
+                .findAny().orElseThrow(IllegalArgumentException::new).getValue();
+
     }
-    
+
     private static final class Transformers {
-        public static Stream<WordSequence> anagram(Stream<WordSequence> data, Object[] parameters) {
+        public static Stream<WordSequence> anagram(Stream<WordSequence> data, ArgumentList parameters) {
             class AnagramIterator implements Iterator<Word> {
                 private final Word start;
                 private Word current;
@@ -163,8 +157,8 @@ public class TransformerFunction {
                     false)));
         }
 
-        public static Stream<WordSequence> splitWords(Stream<WordSequence> data, Object[] args) {
-            int[] wordLengths = Arrays.stream(args).mapToInt(a -> (Integer) a).toArray();
+        public static Stream<WordSequence> splitWords(Stream<WordSequence> data, ArgumentList args) {
+            int[] wordLengths = args.stream().mapToInt(a -> (Integer) a).toArray();
             int wordLengthSum = Arrays.stream(wordLengths).sum();
             return data.filter(ws -> ws.getWords().size() == 1)
                     .filter(ws -> ws.getWords().stream().mapToInt(Word::length).sum() == wordLengthSum)
@@ -179,10 +173,6 @@ public class TransformerFunction {
                         }
                         return new WordSequence(words);
                     });
-        }
-        
-        public static Stream<WordSequence> anyWords(Stream<WordSequence> data, Object[] args) {
-            return data.filter(ws -> ws.getWords().stream().anyMatch(Category.forName("words").getItems()::contains));
         }
 
         private Transformers() {

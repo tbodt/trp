@@ -5,7 +5,6 @@
  */
 package com.tbodt.trp;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -13,10 +12,10 @@ import java.util.stream.Stream;
  *
  * @author Theodore Dubois
  */
-public class FunctionTransformation implements Transformer {
+public class FunctionTransformer implements Transformer {
 
     private final TransformerFunction func;
-    private final List<Object> args;
+    private final ArgumentList args;
 
     /**
      * Constructs an {@code FunctionTransformation} that transforms based on the
@@ -25,14 +24,14 @@ public class FunctionTransformation implements Transformer {
      * @param func the function to use for the transformation
      * @param args the arguments to pass to the function
      */
-    public FunctionTransformation(TransformerFunction func, List<Object> args) {
+    public FunctionTransformer(TransformerFunction func, ArgumentList args) {
         this.func = func;
         this.args = args;
     }
 
     @Override
     public Stream<WordSequence> transform(Stream<WordSequence> data) {
-        return getFunction().invoke(data, getArguments().toArray());
+        return getFunction().invoke(data, getArguments());
     }
 
     /**
@@ -49,7 +48,7 @@ public class FunctionTransformation implements Transformer {
      *
      * @return the arguments
      */
-    public List<Object> getArguments() {
+    public ArgumentList getArguments() {
         return args;
     }
 

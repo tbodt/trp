@@ -18,11 +18,14 @@ public final class FilterFunction extends TransformerFunction {
 
     static {
         functions.put("length", new FilterFunction(
-                (ws, args) -> ws.combine().getWords().get(0).length() == (Integer) args[0],
-                new ArgumentList(ArgumentList.ArgumentType.INTEGER)));
+                (ws, args) -> ws.combine().getWords().get(0).length() == args.integer(0),
+                new ArgumentTypeList(ArgumentTypeList.ArgumentType.INTEGER)));
         functions.put("endsWith", new FilterFunction(
-                (ws, args) -> ws.combine().toString().endsWith((String) args[0]), 
-                new ArgumentList(ArgumentList.ArgumentType.STRING)));
+                (ws, args) -> ws.combine().toString().endsWith(args.string(0)), 
+                new ArgumentTypeList(ArgumentTypeList.ArgumentType.STRING)));
+        functions.put("startsWith", new FilterFunction(
+                (ws, args) -> ws.combine().toString().startsWith(args.string(0)), 
+                new ArgumentTypeList(ArgumentTypeList.ArgumentType.STRING)));
     }
 
     /**
@@ -32,7 +35,7 @@ public final class FilterFunction extends TransformerFunction {
     public interface Lambda extends TransformerFunction.Lambda {
 
         @Override
-        public default Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] parameters) {
+        public default Stream<WordSequence> invoke(Stream<WordSequence> data, ArgumentList parameters) {
             return data.filter(ws -> test(ws, parameters));
         }
 
@@ -43,7 +46,7 @@ public final class FilterFunction extends TransformerFunction {
          * @param args the arguments
          * @return I am moving your eyes up to the method description
          */
-        boolean test(WordSequence ws, Object[] args);
+        boolean test(WordSequence ws, ArgumentList args);
     }
 
     /**
@@ -57,19 +60,19 @@ public final class FilterFunction extends TransformerFunction {
     }
 
     private FilterFunction(Lambda lambda) {
-        this(lambda, new ArgumentList());
+        this(lambda, new ArgumentTypeList());
     }
 
-    private FilterFunction(Lambda lambda, ArgumentList argTypes) {
+    private FilterFunction(Lambda lambda, ArgumentTypeList argTypes) {
         this(Collections.singletonMap(argTypes, lambda));
     }
 
-    private FilterFunction(Map<ArgumentList, Lambda> overloadings) {
+    private FilterFunction(Map<ArgumentTypeList, Lambda> overloadings) {
         super(Collections.unmodifiableMap(overloadings));
     }
 
     @Override
-    public Stream<WordSequence> invoke(Stream<WordSequence> data, Object[] args) {
+    public Stream<WordSequence> invoke(Stream<WordSequence> data, ArgumentList args) {
         return ((FilterFunction.Lambda) lambdaForArgs(args)).invoke(data, args);
     }
 
@@ -79,7 +82,7 @@ public final class FilterFunction extends TransformerFunction {
      * @param args passed to the test method
      * @return the result of the test method
      */
-    public boolean invoke(WordSequence ws, Object[] args) {
+    public boolean invoke(WordSequence ws, ArgumentList args) {
         return ((FilterFunction.Lambda) lambdaForArgs(args)).test(ws, args);
     }
 }
