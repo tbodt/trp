@@ -22,19 +22,19 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
 public class PuzzleParseListener extends PuzzleBaseListener {
 
     private final Set<WordSequence> data = new HashSet<>();
-    private final Stack<List<Transformer>> transformations = new ArrayStack<>();
+    private final Stack<CompoundTransformer.Builder> transformations = new ArrayStack<>();
     private final ParseTreeProperty<Object> values = new ParseTreeProperty<>();
     private final ANTLRErrorListener errListener;
 
     /**
-     * Constructs a {@code PuzzleParseListener} that outputs error messages to the given error
-     * listener.
+     * Constructs a {@code PuzzleParseListener} that outputs error messages to
+     * the given error listener.
      *
      * @param errListener the error listener.
      */
     public PuzzleParseListener(ANTLRErrorListener errListener) {
         this.errListener = errListener;
-        transformations.push(new ArrayList<>());
+        transformations.push(CompoundTransformer.builder());
     }
 
     @Override
@@ -76,12 +76,16 @@ public class PuzzleParseListener extends PuzzleBaseListener {
 
     @Override
     public void enterTransformationValue(PuzzleParser.TransformationValueContext ctx) {
-        transformations.push(new ArrayList<>());
+        transformations.push(CompoundTransformer.builder());
     }
 
     @Override
     public void exitTransformationValue(PuzzleParser.TransformationValueContext ctx) {
-        values.put(ctx, transformations.pop());
+        CompoundTransformer transformation = transformations.pop().build();
+        if (transformation.getTransformers().size() == 1)
+            values.put(ctx, transformation.getTransformers().get(0));
+        else
+            values.put(ctx, transformations.pop());
     }
 
     @Override
@@ -120,8 +124,8 @@ public class PuzzleParseListener extends PuzzleBaseListener {
      *
      * @return the transformations described by the input this parse tree listener heard.
      */
-    public List<Transformer> getTransformations() {
-        return Collections.unmodifiableList(transformations.peek());
+    public CompoundTransformer getTransformations() {
+        return transformations.peek().build();
     }
 
 }
