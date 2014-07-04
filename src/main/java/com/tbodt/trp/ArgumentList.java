@@ -47,6 +47,15 @@ public class ArgumentList {
     }
 
     /**
+     * Returns the number of arguments.
+     *
+     * @return the number of arguments
+     */
+    public int length() {
+        return arguments().size();
+    }
+
+    /**
      * Returns the string at the given index.
      *
      * @param idx the index.
@@ -71,6 +80,36 @@ public class ArgumentList {
     public int integer(int idx) {
         try {
             return (Integer) arguments().get(idx);
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * Returns the transformer at the given index.
+     *
+     * @param idx the index.
+     * @return the argument at the given index
+     * @throws IllegalArgumentException if the argument at the given index is not a transformer
+     */
+    public Transformer transformer(int idx) {
+        try {
+            return (Transformer) arguments().get(idx);
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * Returns the filter at the given index.
+     *
+     * @param idx the index.
+     * @return the argument at the given index
+     * @throws IllegalArgumentException if the argument at the given index is not a filter
+     */
+    public Filter filter(int idx) {
+        try {
+            return (Filter) arguments().get(idx);
         } catch (ClassCastException e) {
             throw new IllegalArgumentException(e);
         }
