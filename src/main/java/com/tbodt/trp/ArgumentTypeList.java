@@ -90,10 +90,10 @@ public final class ArgumentTypeList {
                 return INTEGER;
             else if (arg.getClass() == String.class)
                 return STRING;
-            else if (arg instanceof Transformer)
-                return TRANSFORMER;
             else if (arg instanceof Filter)
                 return FILTER;
+            else if (arg instanceof Transformer)
+                return TRANSFORMER;
             else
                 throw new IllegalArgumentException("invalid argument type " + arg);
         }

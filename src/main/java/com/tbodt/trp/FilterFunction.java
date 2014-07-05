@@ -31,7 +31,7 @@ public final class FilterFunction extends TransformerFunction {
                     for (WordSequence.Word word : ws)
                         good = good && args.filter(0).test(new WordSequence(word));
                     return good;
-                }));
+                }, new ArgumentTypeList(ArgumentTypeList.ArgumentType.FILTER)));
     }
 
     /**
