@@ -5,6 +5,7 @@
  */
 package com.tbodt.trp;
 
+import static com.tbodt.trp.ArgumentTypeList.ArgumentType.*;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -17,21 +18,34 @@ public final class FilterFunction extends TransformerFunction {
     private static final Map<String, FilterFunction> functions = new HashMap<>();
 
     static {
-        functions.put("length", new FilterFunction(
-                (ws, args) -> ws.combine().getWords().get(0).length() == args.integer(0),
-                new ArgumentTypeList(ArgumentTypeList.ArgumentType.INTEGER)));
+        Lambda lengthI = (ws, args) -> ws.combine().getWords().get(0).length() == args.integer(0);
+        Lambda lengthII = (ws, args) -> {
+            int length = ws.combine().getWords().get(0).length();
+            return length >= args.integer(0) && length <= args.integer(1);
+        };
+        Map<ArgumentTypeList, Lambda> lengthOverloadings = new HashMap<>();
+        lengthOverloadings.put(new ArgumentTypeList(INTEGER), lengthI);
+        lengthOverloadings.put(new ArgumentTypeList(INTEGER, INTEGER), lengthII);
+        functions.put("length", new FilterFunction(lengthOverloadings));
+
         functions.put("endsWith", new FilterFunction(
-                (ws, args) -> ws.combine().toString().endsWith(args.string(0)), 
-                new ArgumentTypeList(ArgumentTypeList.ArgumentType.STRING)));
+                (ws, args) -> ws.combine().toString().endsWith(args.string(0)),
+                new ArgumentTypeList(STRING)));
         functions.put("startsWith", new FilterFunction(
-                (ws, args) -> ws.combine().toString().startsWith(args.string(0)), 
-                new ArgumentTypeList(ArgumentTypeList.ArgumentType.STRING)));
+                (ws, args) -> ws.combine().toString().startsWith(args.string(0)),
+                new ArgumentTypeList(STRING)));
         functions.put("all", new FilterFunction((ws, args) -> {
-                    boolean good = true;
-                    for (WordSequence.Word word : ws)
-                        good = good && args.filter(0).test(new WordSequence(word));
-                    return good;
-                }, new ArgumentTypeList(ArgumentTypeList.ArgumentType.FILTER)));
+            boolean good = true;
+            for (WordSequence.Word word : ws)
+                good = good && args.filter(0).test(new WordSequence(word));
+            return good;
+        }, new ArgumentTypeList(FILTER)));
+        functions.put("any", new FilterFunction((ws, args) -> {
+            boolean good = false;
+            for (WordSequence.Word word : ws)
+                good = good || args.filter(0).test(new WordSequence(word));
+            return good;
+        }, new ArgumentTypeList(FILTER)));
     }
 
     /**
@@ -83,7 +97,9 @@ public final class FilterFunction extends TransformerFunction {
     }
 
     /**
-     * Invokes the function using the {@link Lambda#test(com.tbodt.trp.WordSequence, java.lang.Object[])} method.
+     * Invokes the function using the
+     * {@link Lambda#test(com.tbodt.trp.WordSequence, java.lang.Object[])} method.
+     *
      * @param ws passed to the test method
      * @param args passed to the test method
      * @return the result of the test method
