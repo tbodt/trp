@@ -33,8 +33,8 @@ public class PuzzleSolver {
         while (input != null) {
             errors = false;
             ANTLRInputStream inputStream = new ANTLRInputStream(input);
-            PuzzleLexer lexer = new PuzzleLexer(inputStream);
-            PuzzleParser parser = new PuzzleParser(new CommonTokenStream(lexer));
+            CommandLexer lexer = new CommandLexer(inputStream);
+            CommandParser parser = new CommandParser(new CommonTokenStream(lexer));
             ANTLRErrorListener errListener = new BaseErrorListener() {
                 @Override
                 public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int i, int i1, String msg, RecognitionException re) {
@@ -47,9 +47,9 @@ public class PuzzleSolver {
             parser.addErrorListener(errListener);
             lexer.removeErrorListeners();
             lexer.addErrorListener(errListener);
-            ParseTree tree = parser.puzzle();
+            ParseTree tree = parser.command();
             ParseTreeWalker walker = new ParseTreeWalker();
-            PuzzleParseListener listener = new PuzzleParseListener(errListener);
+            CommandParseListener listener = new CommandParseListener(errListener);
             walker.walk(listener, tree);
             if (errors == false) {
                 Stream<WordSequence> dataStream = listener.getData().parallelStream();

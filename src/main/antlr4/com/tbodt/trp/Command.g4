@@ -1,18 +1,21 @@
 /** 
- * A grammer that represents a puzzle for The Rapid Permuter to solve.
+ * A grammer that represents a command for The Rapid Permuter.
  */
-grammar Puzzle;
+grammar Command;
 
 /**
- * A rule describing the whole puzzle.
+ * A rule describing a whole command.
  */
-puzzle: data+ (':' transformation*)? EOF;
+command: data EOF;
+
 /**
  * A rule describing data that will be transformed.
  */
-data: STRING    # StringData
-    | CATEGORY  # CategoryData
+data: STRING                    # StringData
+    | CATEGORY                  # CategoryData
+    | data ':' transformation+  # TransformedData
     ;
+
 /**
  * A rule describing a transformation, either a category or a function.
  */
@@ -20,6 +23,7 @@ transformation
     : CATEGORY                              # CategoryTransformation
     | FUNC ( '(' value (',' value)* ')' )?  # FunctionTransformation
     ;
+
 /**
  * A rule describing a value, i.e. a function argument.
  */

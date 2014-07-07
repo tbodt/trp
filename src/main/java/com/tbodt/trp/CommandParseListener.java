@@ -19,7 +19,7 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
  * @author Theodore Dubois
  */
 @SuppressWarnings("null")
-public class PuzzleParseListener extends PuzzleBaseListener {
+public class CommandParseListener extends CommandBaseListener {
 
     private final Set<WordSequence> data = new HashSet<>();
     private final Stack<CompoundTransformer.Builder> transformations = new ArrayStack<>();
@@ -27,23 +27,23 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     private final ANTLRErrorListener errListener;
 
     /**
-     * Constructs a {@code PuzzleParseListener} that outputs error messages to
+     * Constructs a {@code CommandParseListener} that outputs error messages to
      * the given error listener.
      *
      * @param errListener the error listener.
      */
-    public PuzzleParseListener(ANTLRErrorListener errListener) {
+    public CommandParseListener(ANTLRErrorListener errListener) {
         this.errListener = errListener;
         transformations.push(CompoundTransformer.builder());
     }
 
     @Override
-    public void exitStringData(PuzzleParser.StringDataContext ctx) {
+    public void exitStringData(CommandParser.StringDataContext ctx) {
         data.add(new WordSequence(stripEnds(ctx.STRING().getText())));
     }
 
     @Override
-    public void exitCategoryData(PuzzleParser.CategoryDataContext ctx) {
+    public void exitCategoryData(CommandParser.CategoryDataContext ctx) {
         String catName = stripEnds(ctx.CATEGORY().getText());
         Category cat = Category.forName(catName);
         if (cat == null) {
@@ -54,7 +54,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     }
 
     @Override
-    public void exitCategoryTransformation(PuzzleParser.CategoryTransformationContext ctx) {
+    public void exitCategoryTransformation(CommandParser.CategoryTransformationContext ctx) {
         String catName = stripEnds(ctx.CATEGORY().getText());
         Category cat = Category.forName(catName);
         if (cat == null) {
@@ -65,22 +65,22 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     }
 
     @Override
-    public void exitIntValue(PuzzleParser.IntValueContext ctx) {
+    public void exitIntValue(CommandParser.IntValueContext ctx) {
         values.put(ctx, Integer.valueOf(ctx.INT().getText()));
     }
 
     @Override
-    public void exitStringValue(PuzzleParser.StringValueContext ctx) {
+    public void exitStringValue(CommandParser.StringValueContext ctx) {
         values.put(ctx, ctx.STRING().getText());
     }
 
     @Override
-    public void enterTransformationValue(PuzzleParser.TransformationValueContext ctx) {
+    public void enterTransformationValue(CommandParser.TransformationValueContext ctx) {
         transformations.push(CompoundTransformer.builder());
     }
 
     @Override
-    public void exitTransformationValue(PuzzleParser.TransformationValueContext ctx) {
+    public void exitTransformationValue(CommandParser.TransformationValueContext ctx) {
         CompoundTransformer transformation = transformations.pop().build();
         if (transformation.getTransformers().size() == 1)
             values.put(ctx, transformation.getTransformers().get(0));
@@ -89,7 +89,7 @@ public class PuzzleParseListener extends PuzzleBaseListener {
     }
 
     @Override
-    public void exitFunctionTransformation(PuzzleParser.FunctionTransformationContext ctx) {
+    public void exitFunctionTransformation(CommandParser.FunctionTransformationContext ctx) {
         String name = ctx.FUNC().getText();
         ArgumentList args = new ArgumentList(ctx.value().stream().map(vctx ->
                 values.get((ParseTree) vctx)).collect(Collectors.toList()));
