@@ -31,6 +31,8 @@ public class PuzzleSolver {
         System.out.print("trp> ");
         String input = in.readLine();
         while (input != null) {
+            if (input.equals("exit"))
+                System.exit(0);
             errors = false;
             ANTLRInputStream inputStream = new ANTLRInputStream(input);
             CommandLexer lexer = new CommandLexer(inputStream);
