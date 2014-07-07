@@ -46,6 +46,9 @@ public final class FilterFunction extends TransformerFunction {
         functions.put("startsWith", new FilterFunction(
                 (ws, args) -> ws.combine().toString().startsWith(args.string(0)),
                 new ArgumentTypeList(STRING)));
+        functions.put("contains", new FilterFunction(
+                (ws, args) -> ws.combine().toString().contains(args.string(0)),
+                new ArgumentTypeList(STRING)));
         functions.put("all", new FilterFunction((ws, args) -> {
             boolean good = true;
             for (WordSequence.Word word : ws)
