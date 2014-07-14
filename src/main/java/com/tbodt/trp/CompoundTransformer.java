@@ -76,6 +76,7 @@ public class CompoundTransformer implements Transformer {
         public CompoundTransformer build() {
             if (built)
                 throw new IllegalStateException("builder already built");
+            built = true;
             return new CompoundTransformer(transformers);
         }
     }
