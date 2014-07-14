@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.tbodt.trp;
 
 import java.util.*;
@@ -28,29 +27,63 @@ import java.util.stream.Stream;
 public class CompoundTransformer implements Transformer {
     private final List<Transformer> transformers;
 
-    public CompoundTransformer(List<Transformer> transformers) {
+    /**
+     * Creates a {@code CompoundTransformer} that wraps the given list of {@code Transformer}s.
+     *
+     * @param transformers the list of {@code Transfomers}
+     */
+    public CompoundTransformer(List<? extends Transformer> transformers) {
         this.transformers = Collections.unmodifiableList(transformers);
     }
 
+    /**
+     * Returns a new {@link Builder}.
+     *
+     * @return a new {@link Builder}
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * A builder for {@link CompoundTransformation}s. Builds them up one transformer at a time.
+     */
     public static class Builder {
         private final List<Transformer> transformers = new ArrayList<>();
+        private boolean built = false;
 
         private Builder() {
         }
 
+        /**
+         * Add a new {@code Transformer} to this builder.
+         *
+         * @param tx the transformer
+         */
         public void add(Transformer tx) {
-            transformers.add(tx);
+            if (built)
+                throw new IllegalStateException("builder already built");
+            if (tx instanceof CompoundTransformer)
+                transformers.addAll(((CompoundTransformer) tx).getTransformers());
+            else
+                transformers.add(tx);
         }
-        
+
+        /**
+         * Build a new {@link CompoundTransformer}.
+         * @return a new {@link CompoundTransformer}
+         */
         public CompoundTransformer build() {
+            if (built)
+                throw new IllegalStateException("builder already built");
             return new CompoundTransformer(transformers);
         }
     }
 
+    /**
+     * Returns the {@code Transformers} in this.
+     * @return the {@code Transformers} in this
+     */
     public List<Transformer> getTransformers() {
         return Collections.unmodifiableList(transformers);
     }
