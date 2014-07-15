@@ -30,4 +30,18 @@ public interface Transformer {
      * @return the result of the transformation
      */
     Stream<WordSequence> transform(Stream<WordSequence> data);
+    
+    /**
+     * Returns a new {@link Transformer} that first applies this transformation to the data, then to {@code after}.
+     * 
+     * @param after the transformation to apply after this transformation
+     * @return a new {@link Transformer} that first applies this transformation to the data, then to {@code after}
+     */
+    default Transformer append(Transformer after) {
+        return new Transformer() {
+            public Stream<WordSequence> transform(Stream<WordSequence> data) {
+                return after.transform(Transformer.this.transform(data));
+            }
+        }
+    }
 }
