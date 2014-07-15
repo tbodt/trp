@@ -46,7 +46,9 @@ public class CompoundTransformer implements Transformer {
     }
 
     /**
-     * A builder for {@link CompoundTransformation}s. Builds them up one transformer at a time.
+     * A builder for {@link CompoundTransformation}s. Builds them up one transformer at a time. If
+     * every {@code Transformer} added is actually a {@code Filter}, the returned
+     * {@code CompoundTransformation} will implement {@code Filter}.
      */
     public static class Builder {
         private final List<Transformer> transformers = new ArrayList<>();
@@ -71,18 +73,22 @@ public class CompoundTransformer implements Transformer {
 
         /**
          * Build a new {@link CompoundTransformer}.
+         *
          * @return a new {@link CompoundTransformer}
          */
         public CompoundTransformer build() {
             if (built)
                 throw new IllegalStateException("builder already built");
             built = true;
+            if (transformers.stream().allMatch(tx -> tx instanceof Filter))
+                return new CompoundFilter(transformers);
             return new CompoundTransformer(transformers);
         }
     }
 
     /**
      * Returns the {@code Transformers} in this.
+     *
      * @return the {@code Transformers} in this
      */
     public List<Transformer> getTransformers() {
@@ -94,5 +100,19 @@ public class CompoundTransformer implements Transformer {
         for (Transformer tx : transformers)
             data = tx.transform(data);
         return data;
+    }
+
+    private static class CompoundFilter extends CompoundTransformer implements Filter {
+        public CompoundFilter(List<Transformer> transformers) {
+            super(transformers);
+        }
+
+        @Override
+        public boolean test(WordSequence t) {
+            boolean ret = true;
+            for (Transformer tx : getTransformers())
+                ret = ret && ((Filter) tx).test(t);
+            return ret;
+        }
     }
 }
