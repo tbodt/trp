@@ -38,10 +38,6 @@ public interface Transformer {
      * @return a new {@link Transformer} that first applies this transformation to the data, then to {@code after}
      */
     default Transformer append(Transformer after) {
-        return new Transformer() {
-            public Stream<WordSequence> transform(Stream<WordSequence> data) {
-                return after.transform(Transformer.this.transform(data));
-            }
-        }
+        return (Stream<WordSequence> data) -> after.transform(Transformer.this.transform(data));
     }
 }
