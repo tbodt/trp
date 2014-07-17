@@ -32,6 +32,10 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <visitor>true</visitor>
+                    <listener>false</listener>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
