@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.tbodt.trp;
 
 import java.util.stream.Stream;
@@ -30,20 +29,27 @@ public interface Transformer {
      * @return the result of the transformation
      */
     public Stream<WordSequence> transform(Stream<WordSequence> data);
-    
+
+    public Transformer IDENTITY = (Stream<WordSequence> data) -> data;
+
     /**
-     * Returns a new {@link Transformer} that first applies this transformation to the data, then to {@code after}.
-     * 
+     * Returns a new {@link Transformer} that first applies this transformation to the data, then to
+     * {@code after}.
+     *
      * @param after the transformation to apply after this transformation
-     * @return a new {@link Transformer} that first applies this transformation to the data, then to {@code after}
+     * @return a new {@link Transformer} that first applies this transformation to the data, then to
+     * {@code after}
      */
     public default Transformer append(Transformer after) {
+        if (this == IDENTITY)
+            return after;
+        if (after == IDENTITY)
+            return this;
         if (this instanceof Filter && after instanceof Filter) {
             // We need both lines. I'm too lazy to explain why, so try it and see!
             Filter ret = (WordSequence ws) -> ((Filter) this).test(ws) && ((Filter) after).test(ws);
             return ret;
         }
-        else
-            return (Stream<WordSequence> data) -> after.transform(this.transform(data));
+        return (Stream<WordSequence> data) -> after.transform(this.transform(data));
     }
 }

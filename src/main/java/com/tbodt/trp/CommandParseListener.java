@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.tbodt.trp;
 
 import com.tbodt.jstack.ArrayStack;
@@ -34,19 +33,19 @@ import org.antlr.v4.runtime.tree.ParseTreeProperty;
 public class CommandParseListener extends CommandBaseListener {
 
     private final Set<WordSequence> data = new HashSet<>();
-    private final Stack<CompoundTransformer.Builder> transformations = new ArrayStack<>();
+    private final Stack<Transformer> transformations = new ArrayStack<>();
     private final ParseTreeProperty<Object> values = new ParseTreeProperty<>();
     private final ANTLRErrorListener errListener;
 
     /**
-     * Constructs a {@code CommandParseListener} that outputs error messages to
-     * the given error listener.
+     * Constructs a {@code CommandParseListener} that outputs error messages to the given error
+     * listener.
      *
      * @param errListener the error listener.
      */
     public CommandParseListener(ANTLRErrorListener errListener) {
         this.errListener = errListener;
-        transformations.push(CompoundTransformer.builder());
+        transformations.push(Transformer.IDENTITY);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class CommandParseListener extends CommandBaseListener {
             errListener.syntaxError(null, null, 0, 0, "nonexistent category " + catName, null);
             return;
         }
-        transformations.peek().add(new CategoryTransformation(cat));
+        transformations.push(transformations.pop().append(new CategoryTransformation(cat)));
     }
 
     @Override
@@ -88,23 +87,19 @@ public class CommandParseListener extends CommandBaseListener {
 
     @Override
     public void enterTransformationValue(CommandParser.TransformationValueContext ctx) {
-        transformations.push(CompoundTransformer.builder());
+        transformations.push(Transformer.IDENTITY);
     }
 
     @Override
     public void exitTransformationValue(CommandParser.TransformationValueContext ctx) {
-        CompoundTransformer transformation = transformations.pop().build();
-        if (transformation.getTransformers().size() == 1)
-            values.put(ctx, transformation.getTransformers().get(0));
-        else
-            values.put(ctx, transformations.pop());
+        values.put(ctx, transformations.pop());
     }
 
     @Override
     public void exitFunctionTransformation(CommandParser.FunctionTransformationContext ctx) {
         String name = ctx.FUNC().getText();
-        ArgumentList args = new ArgumentList(ctx.value().stream().map(vctx ->
-                values.get((ParseTree) vctx)).collect(Collectors.toList()));
+        ArgumentList args = new ArgumentList(ctx.value().stream().map(vctx
+                -> values.get((ParseTree) vctx)).collect(Collectors.toList()));
         TransformerFunction fun = TransformerFunction.forName(name);
         if (fun == null) {
             errListener.syntaxError(null, null, 0, 0, "no function with name " + name, null);
@@ -114,8 +109,8 @@ public class CommandParseListener extends CommandBaseListener {
             errListener.syntaxError(null, null, 0, 0, "arguments " + args + " invalid", null);
             return;
         }
-        transformations.peek()
-                .add(new FunctionTransformer(TransformerFunction.forName(name), args));
+        transformations.push(transformations.pop()
+                .append(new FunctionTransformer(TransformerFunction.forName(name), args)));
     }
 
     private static String stripEnds(String str) {
@@ -136,8 +131,8 @@ public class CommandParseListener extends CommandBaseListener {
      *
      * @return the transformations described by the input this parse tree listener heard.
      */
-    public CompoundTransformer getTransformations() {
-        return transformations.peek().build();
+    public Transformer getTransformations() {
+        return transformations.peek();
     }
 
 }
