@@ -29,7 +29,7 @@ public interface Transformer {
      * @param data the data to transform
      * @return the result of the transformation
      */
-    Stream<WordSequence> transform(Stream<WordSequence> data);
+    public Stream<WordSequence> transform(Stream<WordSequence> data);
     
     /**
      * Returns a new {@link Transformer} that first applies this transformation to the data, then to {@code after}.
@@ -37,7 +37,13 @@ public interface Transformer {
      * @param after the transformation to apply after this transformation
      * @return a new {@link Transformer} that first applies this transformation to the data, then to {@code after}
      */
-    default Transformer append(Transformer after) {
-        return (Stream<WordSequence> data) -> after.transform(Transformer.this.transform(data));
+    public default Transformer append(Transformer after) {
+        if (this instanceof Filter && after instanceof Filter) {
+            // We need both lines. I'm too lazy to explain why, so try it and see!
+            Filter ret = (WordSequence ws) -> ((Filter) this).test(ws) && ((Filter) after).test(ws);
+            return ret;
+        }
+        else
+            return (Stream<WordSequence> data) -> after.transform(this.transform(data));
     }
 }
