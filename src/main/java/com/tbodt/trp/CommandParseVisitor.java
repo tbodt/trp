@@ -40,7 +40,7 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
 
     @Override
     public Object visitCategoryData(CommandParser.CategoryDataContext ctx) {
-        String catName = ctx.CATEGORY().getText();
+        String catName = stripEnds(ctx.CATEGORY().getText());
         Category cat = Category.forName(catName);
         if (cat == null)
             reportError("nonexistent category " + catName);
@@ -58,7 +58,7 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
 
     @Override
     public Object visitCategoryTransformation(CommandParser.CategoryTransformationContext ctx) {
-        String catName = ctx.CATEGORY().getText();
+        String catName = stripEnds(ctx.CATEGORY().getText());
         Category cat = Category.forName(catName);
         if (cat == null)
             reportError("nonexistent category " + catName);
