@@ -44,7 +44,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.tbodt.trp.PuzzleSolver</mainClass>
+                            <mainClass>com.tbodt.trp.TheRapidPermuter</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -56,7 +56,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.tbodt.trp.PuzzleSolver</mainClass>
+                            <mainClass>com.tbodt.trp.TheRapidPermuter</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -85,7 +85,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.tbodt.trp.PuzzleSolver</mainClass>
+                    <mainClass>com.tbodt.trp.TheRapidPermuter</mainClass>
                 </configuration>
             </plugin>
             <plugin>

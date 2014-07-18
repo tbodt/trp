@@ -21,14 +21,13 @@ import java.io.*;
 import java.util.stream.Stream;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 /**
  * Main class for The Rapid Permuter.
  *
  * @author Theodore Dubois
  */
-public class PuzzleSolver {
+public class TheRapidPermuter {
 
     private static boolean errors;
 
@@ -52,22 +51,17 @@ public class PuzzleSolver {
             ANTLRErrorListener errListener = new BaseErrorListener() {
                 @Override
                 public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int i, int i1, String msg, RecognitionException re) {
-                    System.out.println(msg);
-                    errors = true;
+                    reportError(msg);
                 }
-
             };
             parser.removeErrorListeners();
             parser.addErrorListener(errListener);
             lexer.removeErrorListeners();
             lexer.addErrorListener(errListener);
             ParseTree tree = parser.command();
-            ParseTreeWalker walker = new ParseTreeWalker();
-            CommandParseListener listener = new CommandParseListener(errListener);
-            walker.walk(listener, tree);
+            CommandParseVisitor visitor = new CommandParseVisitor();
+            Stream<WordSequence> dataStream = (Stream<WordSequence>) visitor.visit(tree);
             if (errors == false) {
-                Stream<WordSequence> dataStream = listener.getData().parallelStream();
-                dataStream = listener.getTransformations().transform(dataStream);
                 dataStream.forEach(System.out::println);
             }
             System.gc(); // why not?
@@ -76,4 +70,8 @@ public class PuzzleSolver {
         }
     }
 
+    public static void reportError(String msg) {
+        System.out.println(msg);
+        errors = true;
+    }
 }
