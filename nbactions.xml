@@ -11,7 +11,7 @@
                 
             </goals>
             <properties>
-                <exec.args>-classpath %classpath com.tbodt.trp.PuzzleSolver</exec.args>
+                <exec.args>-classpath %classpath com.tbodt.trp.TheRapidPermuter</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
