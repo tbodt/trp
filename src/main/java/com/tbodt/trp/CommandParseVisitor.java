@@ -52,7 +52,7 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
         Stream<WordSequence> data = (Stream<WordSequence>) visit(ctx.data());
         Transformer tx = Transformer.IDENTITY;
         for (CommandParser.TransformationContext tc : ctx.transformation())
-            tx.append((Transformer) visit(tc));
+            tx = tx.append((Transformer) visit(tc));
         return tx.transform(data.parallel());
     }
 
