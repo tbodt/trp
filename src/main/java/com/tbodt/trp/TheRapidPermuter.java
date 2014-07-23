@@ -37,14 +37,15 @@ public class TheRapidPermuter {
     public static void main(String[] args) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("trp> ");
-        String input = in.readLine();
-        while (input != null) {
+        String input;
+        while ((input = in.readLine()) != null) {
             if (input.equals("exit"))
                 System.exit(0);
-            CommandProcessor.processCommand(input).ifPresent(data -> data.forEach(System.out::println));
+            // The most important line in the program!
+            CommandProcessor.processCommand(input).ifPresent(data ->
+                    data.forEach(System.out::println));
             System.gc(); // why not?
             System.out.print("trp> ");
-            input = in.readLine();
         }
     }
 
