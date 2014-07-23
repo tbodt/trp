@@ -18,9 +18,6 @@
 package com.tbodt.trp;
 
 import java.io.*;
-import java.util.stream.Stream;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * Main class for The Rapid Permuter.
@@ -44,26 +41,7 @@ public class TheRapidPermuter {
         while (input != null) {
             if (input.equals("exit"))
                 System.exit(0);
-            errors = false;
-            ANTLRInputStream inputStream = new ANTLRInputStream(input);
-            CommandLexer lexer = new CommandLexer(inputStream);
-            CommandParser parser = new CommandParser(new CommonTokenStream(lexer));
-            ANTLRErrorListener errListener = new BaseErrorListener() {
-                @Override
-                public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int i, int i1, String msg, RecognitionException re) {
-                    reportError(msg);
-                }
-            };
-            parser.removeErrorListeners();
-            parser.addErrorListener(errListener);
-            lexer.removeErrorListeners();
-            lexer.addErrorListener(errListener);
-            ParseTree tree = parser.command();
-            CommandParseVisitor visitor = new CommandParseVisitor();
-            Stream<WordSequence> dataStream = (Stream<WordSequence>) visitor.visit(tree);
-            if (errors == false) {
-                dataStream.forEach(System.out::println);
-            }
+            CommandProcessor.processCommand(input).ifPresent(data -> data.forEach(System.out::println));
             System.gc(); // why not?
             System.out.print("trp> ");
             input = in.readLine();

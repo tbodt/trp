@@ -16,7 +16,7 @@
  */
 package com.tbodt.trp;
 
-import static com.tbodt.trp.TheRapidPermuter.reportError;
+import static com.tbodt.trp.CommandProcessor.reportError;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
