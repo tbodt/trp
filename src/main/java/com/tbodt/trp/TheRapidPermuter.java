@@ -26,8 +26,6 @@ import java.io.*;
  */
 public class TheRapidPermuter {
 
-    private static boolean errors;
-
     /**
      * Main method for The Rapid Permuter.
      * 
@@ -40,17 +38,12 @@ public class TheRapidPermuter {
         String input;
         while ((input = in.readLine()) != null) {
             if (input.equals("exit"))
-                System.exit(0);
+                return; // exit
             // The most important line in the program!
             CommandProcessor.processCommand(input).ifPresent(data ->
                     data.forEach(System.out::println));
             System.gc(); // why not?
             System.out.print("trp> ");
         }
-    }
-
-    public static void reportError(String msg) {
-        System.out.println(msg);
-        errors = true;
     }
 }
