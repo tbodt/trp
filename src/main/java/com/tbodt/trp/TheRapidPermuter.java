@@ -61,10 +61,8 @@ public class TheRapidPermuter {
             return;
         }
         
-        if (cmd.hasOption('c')) {
-            System.out.println(cmd.getOptionValue('c'));
+        if (cmd.hasOption('c'))
             doCommand(cmd.getOptionValue('c'));
-        }
         else {
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             System.out.print("trp> ");
