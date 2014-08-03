@@ -54,12 +54,16 @@ public class TheRapidPermuter {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+        CommandProcessor.processCommand("\"\": remove(\"\") in([words])")
+                .ifPresent(x -> x.forEach(y -> {})); // to load all the classes we need
+        
         try {
             cmd = new BasicParser().parse(options, args);
         } catch (ParseException ex) {
             System.err.println(ex.getMessage());
             return;
         }
+        
         if (Arrays.asList(cmd.getOptions()).contains(help)) { // another way commons cli is severely broken
             new HelpFormatter().printHelp("trp", options);
             return;
