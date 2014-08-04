@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.tbodt.trp;
 
 import static com.tbodt.trp.ArgumentTypeList.ArgumentType.*;
@@ -38,6 +37,8 @@ public class TransformerFunction {
         functions.put("splitWords", new TransformerFunction(Transformers::splitWords,
                 new ArgumentTypeList(true, INTEGER)));
         functions.put("remove", new TransformerFunction(Transformers::remove,
+                new ArgumentTypeList(STRING)));
+        functions.put("append", new TransformerFunction(Transformers::append,
                 new ArgumentTypeList(STRING)));
     }
 
@@ -190,13 +191,21 @@ public class TransformerFunction {
                         return new WordSequence(words);
                     });
         }
-        
+
         public static Stream<WordSequence> remove(Stream<WordSequence> data, ArgumentList args) {
             String str = args.string(0);
             return data.filter(ws -> ws.toString().contains(str))
-                    .map(ws -> new WordSequence(ws.getWords().stream().map(word ->
-                            new Word(word.toString().replaceAll(Pattern.quote(str), ""))
-                    )));
+                    .map(ws -> new WordSequence(ws.getWords().stream().map(word
+                                            -> new Word(word.toString().replaceAll(Pattern
+                                                            .quote(str), ""))
+                                    )));
+        }
+
+        public static Stream<WordSequence> append(Stream<WordSequence> data, ArgumentList args) {
+            String str = args.string(0);
+            return data.filter(ws -> ws.count() != 1)
+                    .map(ws -> new WordSequence(ws.getWords().get(0) + str));
+
         }
 
         private Transformers() {
