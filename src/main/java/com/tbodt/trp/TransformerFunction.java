@@ -176,9 +176,9 @@ public class TransformerFunction {
         public static Stream<WordSequence> splitWords(Stream<WordSequence> data, ArgumentList args) {
             int[] wordLengths = args.stream().mapToInt(a -> (Integer) a).toArray();
             int wordLengthSum = Arrays.stream(wordLengths).sum();
-            return data.filter(ws -> ws.getWords().size() == 1)
-                    .filter(ws -> ws.getWords().stream().mapToInt(Word::length).sum() == wordLengthSum)
+            return data.filter(ws -> ws.count() == 1)
                     .map(ws -> ws.getWords().get(0))
+                    .filter(w -> w.length() == wordLengthSum)
                     .map(w -> {
                         String str = w.toString();
                         List<Word> words = new ArrayList<>();
