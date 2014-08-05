@@ -195,10 +195,9 @@ public class TransformerFunction {
         public static Stream<WordSequence> remove(Stream<WordSequence> data, ArgumentList args) {
             String str = args.string(0);
             return data.filter(ws -> ws.toString().contains(str))
-                    .map(ws -> new WordSequence(ws.getWords().stream().map(word
-                                            -> new Word(word.toString().replaceAll(Pattern
-                                                            .quote(str), ""))
-                                    )));
+                    .map(ws -> new WordSequence(ws.getWords().stream().map(word ->
+                            new Word(word.toString().replaceAll(Pattern.quote(str), ""))
+                    )));
         }
 
         public static Stream<WordSequence> append(Stream<WordSequence> data, ArgumentList args) {
