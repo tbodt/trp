@@ -202,7 +202,7 @@ public class TransformerFunction {
 
         public static Stream<WordSequence> append(Stream<WordSequence> data, ArgumentList args) {
             String str = args.string(0);
-            return data.filter(ws -> ws.count() != 1)
+            return data.filter(ws -> ws.count() == 1)
                     .map(ws -> new WordSequence(ws.getWords().get(0) + str));
 
         }
