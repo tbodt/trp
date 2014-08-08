@@ -18,35 +18,31 @@ package com.tbodt.trp;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * A category. Embodies a set of words in the category.
  */
 public class Category {
-    private final Set<WordSequence> items = new HashSet<>();
+    private Set<WordSequence> items;
+    private final BufferedReader in;
     private static final Map<String, Category> cache = new HashMap<>();
 
     private Category(String name) {
-        InputStream in;
+        InputStream stream;
         try {
             if (Category.class.getResource(name) != null)
-                in = Category.class.getResourceAsStream(name);
+                stream = Category.class.getResourceAsStream(name);
             else {
                 File file = new File(name);
                 if (!file.exists())
                     throw new IllegalArgumentException("category " + name + " nonexistent");
-                in = new FileInputStream(file);
+                stream = new FileInputStream(file);
             }
         } catch (FileNotFoundException ex) {
             throw new AssertionError(); // we checked if the file exists!
         }
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-            String item;
-            while ((item = br.readLine()) != null)
-                items.add(new WordSequence(item));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex); // those darn ol' checked exceptions are such a hassle
-        }
+        in = new BufferedReader(new InputStreamReader(stream));
     }
 
     /**
@@ -66,12 +62,34 @@ public class Category {
     }
 
     /**
+     * Returns a stream of the items in this category. If you can, use this instead of
+     * {@code getItems().stream()}, because, if possible, this doesn't slurp up the whole file.
+     *
+     * @return
+     */
+    public Stream<WordSequence> stream() {
+        return in.lines().map(WordSequence::new);
+    }
+
+    /**
      * Returns all items in the category.
      *
      * @return all items in the category
      */
     public Set<WordSequence> getItems() {
+        if (items == null)
+            slurpFile();
         return Collections.unmodifiableSet(items);
     }
 
+    private void slurpFile() {
+        items = new HashSet<>();
+        try {
+            String item;
+            while ((item = in.readLine()) != null)
+                items.add(new WordSequence(item));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex); // those darn ol' checked exceptions are such a hassle
+        }
+    }
 }

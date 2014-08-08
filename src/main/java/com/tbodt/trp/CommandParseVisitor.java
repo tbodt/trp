@@ -44,7 +44,7 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
         Category cat = Category.forName(catName);
         if (cat == null)
             reportError("nonexistent category " + catName);
-        return cat.getItems().stream();
+        return cat.stream();
     }
 
     @Override
