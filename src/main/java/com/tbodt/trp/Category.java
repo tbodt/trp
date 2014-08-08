@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.tbodt.trp;
 
 import java.io.*;
@@ -28,11 +27,22 @@ public class Category {
     private static final Map<String, Category> cache = new HashMap<>();
 
     private Category(String name) {
-        if (Category.class.getResource(name) == null)
-            throw new IllegalArgumentException("category " + name + " nonexistent");
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(Category.class.getResourceAsStream(name)))) {
+        InputStream in;
+        try {
+            if (Category.class.getResource(name) != null)
+                in = Category.class.getResourceAsStream(name);
+            else {
+                File file = new File(name);
+                if (!file.exists())
+                    throw new IllegalArgumentException("category " + name + " nonexistent");
+                in = new FileInputStream(file);
+            }
+        } catch (FileNotFoundException ex) {
+            throw new AssertionError(); // we checked if the file exists!
+        }
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
             String item;
-            while ((item = in.readLine()) != null)
+            while ((item = br.readLine()) != null)
                 items.add(new WordSequence(item));
         } catch (IOException ex) {
             throw new RuntimeException(ex); // those darn ol' checked exceptions are such a hassle
@@ -46,7 +56,7 @@ public class Category {
      * @return the category with the given name
      */
     public static Category forName(String name) {
-        if (Category.class.getResource(name) == null)
+        if (Category.class.getResource(name) == null && !new File(name).exists())
             return null;
         if (cache.containsKey(name))
             return cache.get(name);
