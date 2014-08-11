@@ -32,7 +32,7 @@ public final class FilterFunction extends TransformerFunction {
     static {
         Lambda lengthI = noMultipleWords((ws, args) -> ws.getWords().get(0).length() == args.integer(0));
         Lambda lengthII = noMultipleWords((ws, args) -> {
-            int length = ws.combine().getWords().get(0).length();
+            int length = ws.getWords().get(0).length();
             return length >= args.integer(0) && length <= args.integer(1);
         });
         Map<ArgumentTypeList, Lambda> lengthOverloadings = new HashMap<>();
