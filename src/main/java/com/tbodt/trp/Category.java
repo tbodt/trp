@@ -18,6 +18,7 @@ package com.tbodt.trp;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -25,24 +26,26 @@ import java.util.stream.Stream;
  */
 public class Category {
     private Set<WordSequence> items;
-    private final BufferedReader in;
+    private final Supplier<BufferedReader> in;
     private static final Map<String, Category> cache = new HashMap<>();
 
     private Category(String name) {
-        InputStream stream;
-        try {
-            if (Category.class.getResource(name) != null)
-                stream = Category.class.getResourceAsStream(name);
-            else {
-                File file = new File(name);
-                if (!file.exists())
-                    throw new IllegalArgumentException("category " + name + " nonexistent");
-                stream = new FileInputStream(file);
-            }
-        } catch (FileNotFoundException ex) {
-            throw new AssertionError(); // we checked if the file exists!
+        Supplier<InputStream> stream;
+        if (Category.class.getResource(name) != null)
+            stream = () -> Category.class.getResourceAsStream(name);
+        else {
+            File file = new File(name);
+            if (!file.exists())
+                throw new IllegalArgumentException("category " + name + " nonexistent");
+            stream = () -> {
+                try {
+                    return new FileInputStream(file);
+                } catch (FileNotFoundException ex) {
+                    throw new AssertionError(); // we checked if the file exists!
+                }
+            };
         }
-        in = new BufferedReader(new InputStreamReader(stream));
+        in = () -> new BufferedReader(new InputStreamReader(stream.get()));
     }
 
     /**
@@ -65,10 +68,13 @@ public class Category {
      * Returns a stream of the items in this category. If you can, use this instead of
      * {@code getItems().stream()}, because, if possible, this doesn't slurp up the whole file.
      *
-     * @return
+     * @return a stream of the items in this category
      */
     public Stream<WordSequence> stream() {
-        return in.lines().map(WordSequence::new);
+        Stream<WordSequence> retval = in.get().lines().filter(line ->
+                line.chars().allMatch(ch -> Character.isLetter(ch) || Character.isWhitespace(ch)))
+                .map(WordSequence::new);
+        return retval;
     }
 
     /**
@@ -84,12 +90,15 @@ public class Category {
 
     private void slurpFile() {
         items = new HashSet<>();
+        BufferedReader br = in.get();
         try {
             String item;
-            while ((item = in.readLine()) != null)
-                items.add(new WordSequence(item));
+            while ((item = br.readLine()) != null)
+                if (item.chars()
+                        .allMatch(ch -> Character.isLetter(ch) || Character.isWhitespace(ch)))
+                    items.add(new WordSequence(item));
         } catch (IOException ex) {
-            throw new RuntimeException(ex); // those darn ol' checked exceptions are such a hassle
+            throw new UncheckedIOException(ex); // those darn ol' checked exceptions are such a hassle
         }
     }
 }
