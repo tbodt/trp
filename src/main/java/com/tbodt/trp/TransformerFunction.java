@@ -40,6 +40,7 @@ public class TransformerFunction {
                 new ArgumentTypeList(STRING)));
         functions.put("append", new TransformerFunction(Transformers::append,
                 new ArgumentTypeList(STRING)));
+        functions.put("combine", new TransformerFunction((data, args) -> data.map(WordSequence::combine)));
     }
 
     /**
