@@ -19,6 +19,8 @@ package com.tbodt.trp;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.cli.*;
 
 /**
@@ -52,10 +54,14 @@ public class TheRapidPermuter {
      * 
      * @param args
      * @throws IOException
-     * @throws org.apache.commons.cli.ParseException
      */
-    public static void main(String[] args) throws IOException, ParseException {
-        cmd = new BasicParser().parse(options, args);
+    public static void main(String[] args) throws IOException {
+        try {
+            cmd = new BasicParser().parse(options, args);
+        } catch (ParseException ex) {
+            System.err.println(ex.getMessage());
+            return;
+        }
         if (Arrays.asList(cmd.getOptions()).contains(help)) { // another way commons cli is severely broken
             new HelpFormatter().printHelp("trp", options);
             return;
@@ -85,7 +91,7 @@ public class TheRapidPermuter {
         
         long after = System.nanoTime();
         if (cmd.hasOption('t'))
-            System.out.println ((after - before)/1_000_000 + "ms");
+            System.out.println ((after - before)/1_000_000 + " ms");
         System.gc(); // why not?
     }
 }
