@@ -52,6 +52,9 @@ public final class FilterFunction extends TransformerFunction {
         functions.put("countWords", new FilterFunction(
                 (ws, args) -> ws.count() == args.integer(0),
                 new ArgumentTypeList(INTEGER)));
+        functions.put("in", new FilterFunction(
+                (ws, args) -> args.data(0).contains(ws),
+                new ArgumentTypeList(DATA)));
         functions.put("all", new FilterFunction((ws, args) -> {
             boolean good = true;
             for (WordSequence.Word word : ws)

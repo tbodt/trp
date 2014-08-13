@@ -19,6 +19,7 @@ package com.tbodt.trp;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A list of the types of arguments to a function.
@@ -83,6 +84,10 @@ public final class ArgumentTypeList {
          */
         STRING,
         /**
+         * A data argument type.
+         */
+        DATA,
+        /**
          * A transformer argument type.
          */
         TRANSFORMER,
@@ -106,6 +111,8 @@ public final class ArgumentTypeList {
                 return FILTER;
             else if (arg instanceof Transformer)
                 return TRANSFORMER;
+            else if (arg instanceof Stream)
+                return DATA;
             else
                 throw new IllegalArgumentException("invalid argument type " + arg);
         }
@@ -161,9 +168,12 @@ public final class ArgumentTypeList {
         }
         if (arguments.size() != descriptor.size())
             return false;
-        for (int i = 0; i < arguments.size(); i++)
+        for (int i = 0; i < arguments.size(); i++) {
             if (arguments.get(i) == ArgumentType.FILTER && descriptor.get(i) == ArgumentType.TRANSFORMER)
                 arguments.set(i, ArgumentType.TRANSFORMER);
+            if (arguments.get(i) == ArgumentType.STRING && descriptor.get(i) == ArgumentType.DATA)
+                arguments.set(i, ArgumentType.DATA);
+        }
         return arguments.equals(descriptor);
     }
 

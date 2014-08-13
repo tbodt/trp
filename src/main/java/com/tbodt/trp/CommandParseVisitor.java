@@ -57,15 +57,6 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
     }
 
     @Override
-    public Object visitCategoryTransformation(CommandParser.CategoryTransformationContext ctx) {
-        String catName = stripEnds(ctx.CATEGORY().getText());
-        Category cat = Category.forName(catName);
-        if (cat == null)
-            reportError("nonexistent category " + catName);
-        return new CategoryTransformation(cat);
-    }
-
-    @Override
     public Object visitIntValue(CommandParser.IntValueContext ctx) {
         return Integer.valueOf(ctx.INT().getText());
     }
@@ -80,6 +71,11 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
         return visit(ctx.transformation());
     }
 
+    @Override
+    public Object visitDataValue(CommandParser.DataValueContext ctx) {
+        return visit(ctx.data());
+    }
+    
     @Override
     public Object visitFunctionTransformation(CommandParser.FunctionTransformationContext ctx) {
         String name = ctx.FUNC().getText();

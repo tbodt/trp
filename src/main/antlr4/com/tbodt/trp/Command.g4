@@ -20,8 +20,7 @@ data: STRING                    # StringData
  * A rule describing a transformation, either a category or a function.
  */
 transformation
-    : CATEGORY                              # CategoryTransformation
-    | FUNC ( '(' value (',' value)* ')' )?  # FunctionTransformation
+    : FUNC ( '(' value (',' value)* ')' )?  # FunctionTransformation
     ;
 
 /**
@@ -31,6 +30,7 @@ value
     : INT               # IntValue
     | STRING            # StringValue
     | transformation    # TransformationValue
+    | data              # DataValue
     ;
 
 STRING : '"' ~["]* '"' ;

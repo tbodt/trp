@@ -18,6 +18,7 @@
 package com.tbodt.trp;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -26,16 +27,16 @@ import java.util.stream.Stream;
  * @author Theodore Dubois
  */
 public class ArgumentList {
-    private final List<Object> args;
+    private final Object[] args;
     private final ArgumentTypeList argTypes;
 
     /**
-     * Constructs an {@code ArgumentList} from an array of arguments.
+     * Constructs an {@code ArgumentList} from a list of arguments.
      *
      * @param args the arguments
      */
     public ArgumentList(List<Object> args) {
-        this.args = args;
+        this.args = args.toArray();
         this.argTypes = ArgumentTypeList.of(args);
     }
 
@@ -45,7 +46,7 @@ public class ArgumentList {
      * @return the arguments
      */
     public List<Object> arguments() {
-        return Collections.unmodifiableList(args);
+        return Collections.unmodifiableList(Arrays.asList(args));
     }
 
     /**
@@ -55,7 +56,7 @@ public class ArgumentList {
      * @return the argument at the given index
      */
     public Object argument(int idx) {
-        return arguments().get(idx);
+        return args[idx];
     }
 
     /**
@@ -64,7 +65,7 @@ public class ArgumentList {
      * @return the number of arguments
      */
     public int length() {
-        return arguments().size();
+        return args.length;
     }
 
     /**
@@ -76,7 +77,7 @@ public class ArgumentList {
      */
     public String string(int idx) {
         try {
-            return (String) arguments().get(idx);
+            return (String) args[idx];
         } catch (ClassCastException e) {
             throw new IllegalArgumentException(e);
         }
@@ -91,7 +92,30 @@ public class ArgumentList {
      */
     public int integer(int idx) {
         try {
-            return (Integer) arguments().get(idx);
+            return (Integer) args[idx];
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+    
+    /**
+     * Returns the data at the given index.
+     *
+     * @param idx the index.
+     * @return the argument at the given index
+     * @throws IllegalArgumentException if the argument at the given index is not data
+     */
+    public Set<WordSequence> data(int idx) {
+        if (!(args[idx] instanceof Set))
+            args[idx] = dataStream(idx).collect(Collectors.toSet());
+        return (Set<WordSequence>) args[idx];
+    }
+    private Stream<WordSequence> dataStream(int idx) {
+        try {
+            Object arg = args[idx];
+            if (arg instanceof String)
+                return Stream.of(new WordSequence((String) arg));
+            return (Stream<WordSequence>) args[idx];
         } catch (ClassCastException e) {
             throw new IllegalArgumentException(e);
         }
@@ -106,7 +130,7 @@ public class ArgumentList {
      */
     public Transformer transformer(int idx) {
         try {
-            return (Transformer) arguments().get(idx);
+            return (Transformer) args[idx];
         } catch (ClassCastException e) {
             throw new IllegalArgumentException(e);
         }
@@ -121,7 +145,7 @@ public class ArgumentList {
      */
     public Filter filter(int idx) {
         try {
-            return (Filter) arguments().get(idx);
+            return (Filter) args[idx];
         } catch (ClassCastException e) {
             throw new IllegalArgumentException(e);
         }
@@ -138,7 +162,7 @@ public class ArgumentList {
      * @return a stream of the arguments
      */
     public Stream<Object> stream() {
-        return arguments().stream();
+        return Arrays.stream(args);
     }
 
     /**
