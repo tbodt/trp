@@ -18,8 +18,6 @@ package com.tbodt.trp;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.cli.*;
 
 /**
