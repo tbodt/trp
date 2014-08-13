@@ -30,25 +30,28 @@ public final class FilterFunction extends TransformerFunction {
     private static final Map<String, FilterFunction> functions = new HashMap<>();
 
     static {
-        Lambda lengthI = (ws, args) -> ws.combine().getWords().get(0).length() == args.integer(0);
-        Lambda lengthII = (ws, args) -> {
-            int length = ws.combine().getWords().get(0).length();
+        Lambda lengthI = noMultipleWords((ws, args) -> ws.getWords().get(0).length() == args.integer(0));
+        Lambda lengthII = noMultipleWords((ws, args) -> {
+            int length = ws.getWords().get(0).length();
             return length >= args.integer(0) && length <= args.integer(1);
-        };
+        });
         Map<ArgumentTypeList, Lambda> lengthOverloadings = new HashMap<>();
         lengthOverloadings.put(new ArgumentTypeList(INTEGER), lengthI);
         lengthOverloadings.put(new ArgumentTypeList(INTEGER, INTEGER), lengthII);
         functions.put("length", new FilterFunction(lengthOverloadings));
 
         functions.put("endsWith", new FilterFunction(
-                (ws, args) -> ws.combine().toString().endsWith(args.string(0)),
+                noMultipleWords((ws, args) -> ws.toString().endsWith(args.string(0))),
                 new ArgumentTypeList(STRING)));
         functions.put("startsWith", new FilterFunction(
-                (ws, args) -> ws.combine().toString().startsWith(args.string(0)),
+                noMultipleWords((ws, args) -> ws.toString().startsWith(args.string(0))),
                 new ArgumentTypeList(STRING)));
         functions.put("contains", new FilterFunction(
-                (ws, args) -> ws.combine().toString().contains(args.string(0)),
+                noMultipleWords((ws, args) -> ws.toString().contains(args.string(0))),
                 new ArgumentTypeList(STRING)));
+        functions.put("countWords", new FilterFunction(
+                (ws, args) -> ws.count() == args.integer(0),
+                new ArgumentTypeList(INTEGER)));
         functions.put("all", new FilterFunction((ws, args) -> {
             boolean good = true;
             for (WordSequence.Word word : ws)
@@ -62,7 +65,24 @@ public final class FilterFunction extends TransformerFunction {
             return good;
         }, new ArgumentTypeList(FILTER)));
     }
-
+    
+    private static Lambda noMultipleWords(Lambda in) {
+        return (ws, args) -> {
+            if (ws.getWords().size() != 1)
+                return false;
+            return in.test(ws, args);
+        };
+    }
+    /*
+    private static void addOverloading(String name, Lambda lambda, ArgumentTypeList args) {
+        if (!functions.containsKey(name))
+            functions.put(name, new FilterFunction(lambda, args));
+        else {
+            
+        }
+    }
+    */
+    
     /**
      * A {@code FunctionalInterface} that describes a filter function.
      */

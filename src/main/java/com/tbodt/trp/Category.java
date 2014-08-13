@@ -14,29 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.tbodt.trp;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * A category. Embodies a set of words in the category.
  */
 public class Category {
-    private final Set<WordSequence> items = new HashSet<>();
+    private Set<WordSequence> items;
+    private final Supplier<BufferedReader> in;
     private static final Map<String, Category> cache = new HashMap<>();
 
     private Category(String name) {
-        if (Category.class.getResource(name) == null)
-            throw new IllegalArgumentException("category " + name + " nonexistent");
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(Category.class.getResourceAsStream(name)))) {
-            String item;
-            while ((item = in.readLine()) != null)
-                items.add(new WordSequence(item));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex); // those darn ol' checked exceptions are such a hassle
+        Supplier<InputStream> stream;
+        if (Category.class.getResource(name) != null)
+            stream = () -> Category.class.getResourceAsStream(name);
+        else {
+            File file = new File(name);
+            if (!file.exists())
+                throw new IllegalArgumentException("category " + name + " nonexistent");
+            stream = () -> {
+                try {
+                    return new FileInputStream(file);
+                } catch (FileNotFoundException ex) {
+                    throw new AssertionError(); // we checked if the file exists!
+                }
+            };
         }
+        in = () -> new BufferedReader(new InputStreamReader(stream.get()));
     }
 
     /**
@@ -46,7 +55,7 @@ public class Category {
      * @return the category with the given name
      */
     public static Category forName(String name) {
-        if (Category.class.getResource(name) == null)
+        if (Category.class.getResource(name) == null && !new File(name).exists())
             return null;
         if (cache.containsKey(name))
             return cache.get(name);
@@ -56,12 +65,40 @@ public class Category {
     }
 
     /**
+     * Returns a stream of the items in this category. If you can, use this instead of
+     * {@code getItems().stream()}, because, if possible, this doesn't slurp up the whole file.
+     *
+     * @return a stream of the items in this category
+     */
+    public Stream<WordSequence> stream() {
+        Stream<WordSequence> retval = in.get().lines().filter(line ->
+                line.chars().allMatch(ch -> Character.isLetter(ch) || Character.isWhitespace(ch)))
+                .map(WordSequence::new);
+        return retval;
+    }
+
+    /**
      * Returns all items in the category.
      *
      * @return all items in the category
      */
     public Set<WordSequence> getItems() {
+        if (items == null)
+            slurpFile();
         return Collections.unmodifiableSet(items);
     }
 
+    private void slurpFile() {
+        items = new HashSet<>();
+        BufferedReader br = in.get();
+        try {
+            String item;
+            while ((item = br.readLine()) != null)
+                if (item.chars()
+                        .allMatch(ch -> Character.isLetter(ch) || Character.isWhitespace(ch)))
+                    items.add(new WordSequence(item));
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex); // those darn ol' checked exceptions are such a hassle
+        }
+    }
 }

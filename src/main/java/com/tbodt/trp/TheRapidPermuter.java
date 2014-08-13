@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.tbodt.trp;
 
 import java.io.*;
@@ -49,9 +48,10 @@ public class TheRapidPermuter {
             .addOption(timing)
             .addOption(help);
     private static CommandLine cmd;
+
     /**
      * Main method for The Rapid Permuter.
-     * 
+     *
      * @param args
      * @throws IOException
      */
@@ -66,7 +66,7 @@ public class TheRapidPermuter {
             new HelpFormatter().printHelp("trp", options);
             return;
         }
-        
+
         if (cmd.hasOption('c'))
             doCommand(cmd.getOptionValue('c'));
         else {
@@ -81,17 +81,17 @@ public class TheRapidPermuter {
             }
         }
     }
-    
+
     private static void doCommand(String command) {
         long before = System.nanoTime();
-        
+
         // The most important line in the program!
-        CommandProcessor.processCommand(command).ifPresent(data ->
-                data.forEach(System.out::println));
-        
+        CommandProcessor.processCommand(command).ifPresent(data
+                -> data.forEach(System.out::println));
+
         long after = System.nanoTime();
         if (cmd.hasOption('t'))
-            System.out.println ((after - before)/1_000_000 + " ms");
+            System.out.println((after - before) / 1_000_000 + " ms");
         System.gc(); // why not?
     }
 }

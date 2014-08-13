@@ -37,7 +37,7 @@ public final class WordSequence implements Iterable<WordSequence.Word> {
      *
      * @param data the data
      */
-    public WordSequence(String data) {
+    public WordSequence(CharSequence data) {
         words = Pattern.compile("\\s+").splitAsStream(data).map(Word::new).collect(Collectors.toList());
     }
 
@@ -85,6 +85,15 @@ public final class WordSequence implements Iterable<WordSequence.Word> {
      */
     public List<Word> getWords() {
         return Collections.unmodifiableList(words);
+    }
+    
+    /**
+     * Returns the number of words in this {@code WordSequence}.
+     * 
+     * @return the number of words in this {@code WordSequence}
+     */
+    public int count() {
+        return words.size();
     }
 
     /**

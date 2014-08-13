@@ -34,7 +34,7 @@ value
     ;
 
 STRING : '"' ~["]* '"' ;
-CATEGORY : '[' [a-zA-Z/]* ']' ;
+CATEGORY : '[' ~[\]]* ']' ;
 INT : '-'? [0-9]+ ;
 FUNC : [a-zA-Z]+ ;
 WS : [ \t\r\n\f]+ -> skip;

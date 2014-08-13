@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.tbodt.trp;
 
+import static com.tbodt.trp.ArgumentTypeList.ArgumentType.*;
 import com.tbodt.trp.WordSequence.Word;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -34,7 +35,12 @@ public class TransformerFunction {
     static {
         functions.put("anagram", new TransformerFunction(Transformers::anagram));
         functions.put("splitWords", new TransformerFunction(Transformers::splitWords,
-                new ArgumentTypeList(true, ArgumentTypeList.ArgumentType.INTEGER)));
+                new ArgumentTypeList(true, INTEGER)));
+        functions.put("remove", new TransformerFunction(Transformers::remove,
+                new ArgumentTypeList(STRING)));
+        functions.put("append", new TransformerFunction(Transformers::append,
+                new ArgumentTypeList(STRING)));
+        functions.put("combine", new TransformerFunction((data, args) -> data.map(WordSequence::combine)));
     }
 
     /**
@@ -172,9 +178,9 @@ public class TransformerFunction {
         public static Stream<WordSequence> splitWords(Stream<WordSequence> data, ArgumentList args) {
             int[] wordLengths = args.stream().mapToInt(a -> (Integer) a).toArray();
             int wordLengthSum = Arrays.stream(wordLengths).sum();
-            return data.filter(ws -> ws.getWords().size() == 1)
-                    .filter(ws -> ws.getWords().stream().mapToInt(Word::length).sum() == wordLengthSum)
+            return data.filter(ws -> ws.count() == 1)
                     .map(ws -> ws.getWords().get(0))
+                    .filter(w -> w.length() == wordLengthSum)
                     .map(w -> {
                         String str = w.toString();
                         List<Word> words = new ArrayList<>();
@@ -185,6 +191,21 @@ public class TransformerFunction {
                         }
                         return new WordSequence(words);
                     });
+        }
+
+        public static Stream<WordSequence> remove(Stream<WordSequence> data, ArgumentList args) {
+            String str = args.string(0);
+            return data.filter(ws -> ws.toString().contains(str))
+                    .map(ws -> new WordSequence(ws.getWords().stream().map(word ->
+                            new Word(word.toString().replaceAll(Pattern.quote(str), ""))
+                    )));
+        }
+
+        public static Stream<WordSequence> append(Stream<WordSequence> data, ArgumentList args) {
+            String str = args.string(0);
+            return data.filter(ws -> ws.count() == 1)
+                    .map(ws -> new WordSequence(ws.getWords().get(0) + str));
+
         }
 
         private Transformers() {
