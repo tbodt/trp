@@ -25,7 +25,6 @@ import java.util.stream.Stream;
  *
  * @author Theodore Dubois
  */
-@SuppressWarnings("null")
 public class CommandParseVisitor extends CommandBaseVisitor<Object> {
 
     @Override
@@ -42,8 +41,10 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
     public Object visitCategoryData(CommandParser.CategoryDataContext ctx) {
         String catName = stripEnds(ctx.CATEGORY().getText());
         Category cat = Category.forName(catName);
-        if (cat == null)
+        if (cat == null) {
             reportError("nonexistent category " + catName);
+            return Stream.empty();
+        }
         return cat.stream();
     }
 
