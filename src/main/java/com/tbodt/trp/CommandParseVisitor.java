@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * A parse tree listener for The Rapid Permuter.
+ * A parse tree visitor for The Rapid Permuter.
  *
  * @author Theodore Dubois
  */
