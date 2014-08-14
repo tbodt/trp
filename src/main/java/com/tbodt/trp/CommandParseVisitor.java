@@ -29,7 +29,10 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
 
     @Override
     public Object visitCommand(CommandParser.CommandContext ctx) {
-        return visit(ctx.data());
+        Object data = visit(ctx.data());
+        if (data instanceof Category)
+            data = ((Category) data).stream();
+        return data;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
             reportError("nonexistent category " + catName);
             return Stream.empty();
         }
-        return cat.stream();
+        return cat;
     }
 
     @Override
@@ -74,7 +77,10 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
 
     @Override
     public Object visitDataValue(CommandParser.DataValueContext ctx) {
-        return visit(ctx.data());
+        Object data = visit(ctx.data());
+        if (data instanceof Category)
+            data = ((Category) data).getItems();
+        return data;
     }
     
     @Override
