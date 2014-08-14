@@ -111,7 +111,7 @@ public final class ArgumentTypeList {
                 return FILTER;
             else if (arg instanceof Transformer)
                 return TRANSFORMER;
-            else if (arg instanceof Stream)
+            else if (arg instanceof Stream || arg instanceof Set)
                 return DATA;
             else
                 throw new IllegalArgumentException("invalid argument type " + arg);
