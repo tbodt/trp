@@ -40,7 +40,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath com.tbodt.trp.PuzzleSolver</exec.args>
+                <exec.args>-classpath %classpath com.tbodt.trp.TheRapidPermuter</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
