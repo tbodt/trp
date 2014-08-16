@@ -35,11 +35,12 @@ public class WordSequenceTest {
         assertEquals(ws.count(), 1);
         int i = 0;
         for (WordSequence.Word word : ws) {
-            i++;
             assertEquals(word, new WordSequence.Word("hello"));
             assertEquals(word.toString(), "hello");
             assertEquals(word, ws.getWords().get(i));
+            i++;
         }
+        assertEquals(i, 1);
         assertEquals(ws.append(new WordSequence.Word("goodbye")), new WordSequence("hello goodbye"));
     }
 }
