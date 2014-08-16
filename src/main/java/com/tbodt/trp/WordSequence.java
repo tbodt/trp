@@ -29,6 +29,7 @@ import java.util.stream.Stream;
  * @author Theodore Dubois
  */
 public final class WordSequence implements Iterable<WordSequence.Word> {
+    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
     private final List<Word> words;
     private static final Word[] EMPTY_WORD_ARRAY = new Word[0];
 
@@ -38,7 +39,7 @@ public final class WordSequence implements Iterable<WordSequence.Word> {
      * @param data the data
      */
     public WordSequence(CharSequence data) {
-        words = Pattern.compile("\\s+").splitAsStream(data).map(Word::new).collect(Collectors.toList());
+        words = WHITESPACE_PATTERN.splitAsStream(data).map(Word::new).collect(Collectors.toList());
     }
 
     /**
