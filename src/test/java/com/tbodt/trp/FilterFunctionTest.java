@@ -48,7 +48,7 @@ public class FilterFunctionTest {
 
     @Test
     public void testStartsWith() {
-        FilterFunction startsWith = FilterFunction.forName("endsWith");
+        FilterFunction startsWith = FilterFunction.forName("startsWith");
         assertTrue(startsWith.invoke(new WordSequence("hello"), new ArgumentList(Arrays.asList("hel"))));
         assertFalse(startsWith.invoke(new WordSequence("hello"), new ArgumentList(Arrays.asList("llo"))));
         assertFalse(startsWith.invoke(new WordSequence("hi and bye"), new ArgumentList(Arrays.asList("hi"))));
