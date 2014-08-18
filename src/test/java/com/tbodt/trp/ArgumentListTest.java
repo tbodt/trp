@@ -44,9 +44,9 @@ public class ArgumentListTest {
         assertEquals("hello", aList.argument(0));
         assertEquals(3, aList.integer(1));
         assertEquals(3, aList.argument(1));
+        assertEquals(Collections.emptySet(), aList.data(2));
+        assertEquals(Collections.emptySet(), aList.argument(2));
         assertEquals(Collections.emptySet(), aList.data(3));
         assertEquals(Collections.emptySet(), aList.argument(3));
-        assertEquals(Collections.emptySet(), aList.data(4));
-        assertEquals(Collections.emptySet(), aList.argument(4));
     }
 }
