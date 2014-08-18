@@ -14,10 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.tbodt.trp;
 
+import com.tbodt.trp.WordSequence.Word;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.stream.Stream;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -29,18 +31,32 @@ public class WordSequenceTest {
     @Test
     public void testMethods() {
         WordSequence ws = new WordSequence("hello");
+        assertEquals(ws, new WordSequence(new Word("hello")));
         assertEquals(ws.toString(), "hello");
         assertEquals(ws.combine(), ws);
-        assertEquals(ws.getWords(), Collections.singletonList(new WordSequence.Word("hello")));
+        assertEquals(ws.getWords(), Collections.singletonList(new Word("hello")));
         assertEquals(ws.count(), 1);
         int i = 0;
-        for (WordSequence.Word word : ws) {
-            assertEquals(word, new WordSequence.Word("hello"));
+        for (Word word : ws) {
+            assertEquals(word, new Word("hello"));
             assertEquals(word.toString(), "hello");
             assertEquals(word, ws.getWords().get(i));
             i++;
         }
         assertEquals(i, 1);
-        assertEquals(ws.append(new WordSequence.Word("goodbye")), new WordSequence("hello goodbye"));
+        assertEquals(ws.append(new Word("goodbye")), new WordSequence("hello goodbye"));
+    }
+
+    @Test
+    public void testConstructors() {
+        WordSequence[] shouldBeEqual = {
+            new WordSequence("hello goodbye"),
+            new WordSequence(Arrays.asList(new Word("hello"), new Word("goodbye"))),
+            new WordSequence(Stream.of(new Word("hello"), new Word("goodbye"))),
+            new WordSequence(new Word[] {new Word("hello"), new Word("goodbye")}),
+        };
+        for (WordSequence ws1 : shouldBeEqual)
+            for (WordSequence ws2 : shouldBeEqual)
+                assertEquals(ws1, ws2);
     }
 }
