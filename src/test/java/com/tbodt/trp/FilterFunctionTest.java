@@ -53,5 +53,12 @@ public class FilterFunctionTest {
         assertFalse(startsWith.invoke(new WordSequence("hello"), new ArgumentList(Arrays.asList("llo"))));
         assertFalse(startsWith.invoke(new WordSequence("hi and bye"), new ArgumentList(Arrays.asList("hi"))));
     }
-
+    
+    @Test
+    public void testContains() {
+        FilterFunction contains = FilterFunction.forName("contains");
+        assertTrue(contains.invoke(new WordSequence("hello"), new ArgumentList(Arrays.asList("ell"))));
+        assertFalse(contains.invoke(new WordSequence("hello"), new ArgumentList(Arrays.asList("reo"))));
+        assertFalse(contains.invoke(new WordSequence("hi and bye"), new ArgumentList(Arrays.asList("and"))));
+    }
 }
