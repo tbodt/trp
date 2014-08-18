@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.tbodt.trp;
 
 import java.util.*;
@@ -97,7 +96,7 @@ public class ArgumentList {
             throw new IllegalArgumentException(e);
         }
     }
-    
+
     /**
      * Returns the data at the given index.
      *
@@ -106,16 +105,10 @@ public class ArgumentList {
      * @throws IllegalArgumentException if the argument at the given index is not data
      */
     public Set<WordSequence> data(int idx) {
-        if (!(args[idx] instanceof Set))
-            args[idx] = dataStream(idx).collect(Collectors.toSet());
-        return (Set<WordSequence>) args[idx];
-    }
-    private Stream<WordSequence> dataStream(int idx) {
         try {
-            Object arg = args[idx];
-            if (arg instanceof String)
-                return Stream.of(new WordSequence((String) arg));
-            return (Stream<WordSequence>) args[idx];
+            if (!(args[idx] instanceof Set))
+                args[idx] = ((Stream<WordSequence>) args[idx]).collect(Collectors.toSet());
+            return (Set<WordSequence>) args[idx];
         } catch (ClassCastException e) {
             throw new IllegalArgumentException(e);
         }

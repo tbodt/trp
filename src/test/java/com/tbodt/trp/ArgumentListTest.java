@@ -32,18 +32,18 @@ public class ArgumentListTest {
         Object[] args = {
             "hello", // string
             3, // integer
-            "string data", // string data
             Collections.emptySet(), // set data
             Stream.empty(), // stream data
         };
         ArgumentList aList = new ArgumentList(Arrays.asList(args));
         
+        assertEquals(Arrays.asList(args), aList.arguments());
+        assertEquals(args.length, aList.length());
+        
         assertEquals("hello", aList.string(0));
         assertEquals("hello", aList.argument(0));
         assertEquals(3, aList.integer(1));
         assertEquals(3, aList.argument(1));
-        assertEquals(Collections.singleton(new WordSequence("string data")), aList.data(2));
-        assertEquals(Collections.singleton(new WordSequence("string data")), aList.argument(2));
         assertEquals(Collections.emptySet(), aList.data(3));
         assertEquals(Collections.emptySet(), aList.argument(3));
         assertEquals(Collections.emptySet(), aList.data(4));
