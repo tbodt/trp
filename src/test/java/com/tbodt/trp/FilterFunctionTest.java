@@ -73,7 +73,7 @@ public class FilterFunctionTest {
     @Test
     public void testIn() {
         FilterFunction in = FilterFunction.forName("in");
-        assertTrue(in.invoke(new WordSequence("cow"), new ArgumentList(Arrays.asList(Category.forName("animals").stream()))));
-        assertFalse(in.invoke(new WordSequence("not a cow"), new ArgumentList(Arrays.asList(Category.forName("animals").stream()))));
+        assertTrue(in.invoke(new WordSequence("hello"), new ArgumentList(Arrays.asList(Category.forName("words").stream()))));
+        assertFalse(in.invoke(new WordSequence("not hello"), new ArgumentList(Arrays.asList(Category.forName("words").stream()))));
     }
 }
