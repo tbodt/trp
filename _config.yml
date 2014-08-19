@@ -4,7 +4,7 @@ name: Theodore Dubois
 email: tblodt@icloud.com
 description: > 
   The Rapid Permuter, henceforth known as TRP, rapidly permutes words to solve word puzzles. It does so with the help of the Java 8 stream API, to achieve maximum concurrency and to impress you with too many buzzwords.
-baseurl: "/trp/" # the subpath of your site, e.g. /blog/
+baseurl: "/trp" # the subpath of your site, e.g. /blog/
 url: "http://yourdomain.com" # the base hostname & protocol for your site
 twitter_username: tblodt
 github_username:  tbodt
