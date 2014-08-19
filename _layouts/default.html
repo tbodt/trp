@@ -10,15 +10,18 @@
     <div class="page-content">
       <div class="wrapper">
         <div class="sidebar">
-          <ul class="post-list">
-    				{% for page in site.pages %}
-      				{% if page.title != 'About' %}
-      					<li>
-          					<a href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
-      					</li>
-      				{% endif %}
-    				{% endfor %}
-  				</ul>
+        	<div class="sidebar-category">
+						<h1 class="page-heading">Documentation</h1>
+						<ul class="post-list">
+							{% for page in site.pages %}
+								{% if page.title != 'About' %}
+									<li>
+											<a href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
+									</li>
+								{% endif %}
+							{% endfor %}
+						</ul>
+  				</div>
     		</div>
       	<div class="content">
         	{{ content }}

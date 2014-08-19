@@ -176,10 +176,15 @@
 
 .page-heading {
     font-size: 20px;
+
 }
 
+.sidebar-category {
+    &:not(:last-child) {
+        border-bottom: 1px solid $grey-color-light;
+    }
+}
 .post-list {
-    margin-left: 0;
     list-style: none;
 }
 
@@ -192,12 +197,6 @@
     display: block;
     font-size: 24px;
 }
-
-.sidebar-post-link {
-    font-size: 12px;
-}
-
-
 
 /**
  * Posts
