@@ -1,14 +1,13 @@
 # Site settings
-title: Your awesome title
-email: your-email@domain.com
-description: > # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+title: The Rapid Permuter
+name: Theodore Dubois
+email: tblodt@icloud.com
+description: > 
+  The Rapid Permuter, henceforth known as TRP, rapidly permutes words to solve word puzzles. It does so with the help of the Java 8 stream API, to achieve maximum concurrency and to impress you with too many buzzwords.
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://yourdomain.com" # the base hostname & protocol for your site
-twitter_username: jekyllrb
-github_username:  jekyll
+twitter_username: tblodt
+github_username:  tbodt
 
 # Build settings
 markdown: kramdown

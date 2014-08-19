@@ -165,6 +165,15 @@
     padding: $spacing-unit 0;
 }
 
+.content {
+    margin-right: 250px;
+}
+
+.sidebar {
+    width: 200px;
+    float: right;
+}
+
 .page-heading {
     font-size: 20px;
 }
@@ -172,10 +181,6 @@
 .post-list {
     margin-left: 0;
     list-style: none;
-
-    > li {
-        margin-bottom: $spacing-unit;
-    }
 }
 
 .post-meta {
@@ -186,6 +191,10 @@
 .post-link {
     display: block;
     font-size: 24px;
+}
+
+.sidebar-post-link {
+    font-size: 12px;
 }
 
 
