@@ -76,4 +76,26 @@ public class FilterFunctionTest {
         assertTrue(in.invoke(new WordSequence("hello"), new ArgumentList(Arrays.asList(Category.forName("words").stream()))));
         assertFalse(in.invoke(new WordSequence("not hello"), new ArgumentList(Arrays.asList(Category.forName("words").stream()))));
     }
+    
+    @Test
+    public void testAny() {
+        WordSequence empty = new WordSequence("");
+        FilterFunction any = FilterFunction.forName("any");
+        assertTrue(any.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE))));
+        assertTrue(any.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.TRUE))));
+        assertTrue(any.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.FALSE))));
+        assertFalse(any.invoke(empty, new ArgumentList(Arrays.asList(Filter.FALSE))));
+        assertFalse(any.invoke(empty, new ArgumentList(Arrays.asList(Filter.FALSE, Filter.FALSE))));
+    }
+    
+    @Test
+    public void testAll() {
+        WordSequence empty = new WordSequence("");
+        FilterFunction all = FilterFunction.forName("all");
+        assertTrue(all.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE))));
+        assertTrue(all.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.TRUE))));
+        assertFalse(all.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.FALSE))));
+        assertFalse(all.invoke(empty, new ArgumentList(Arrays.asList(Filter.FALSE))));
+        assertFalse(all.invoke(empty, new ArgumentList(Arrays.asList(Filter.FALSE, Filter.FALSE))));
+    }
 }

@@ -24,6 +24,9 @@ import java.util.stream.Stream;
  * @author Theodore Dubois
  */
 public interface Filter extends Transformer, Predicate<WordSequence> {
+    public static final Filter TRUE = ws -> true;
+    public static final Filter FALSE = ws -> false;
+    
     @Override
     public default Stream<WordSequence> transform(Stream<WordSequence> data) {
         return data.filter(this);
