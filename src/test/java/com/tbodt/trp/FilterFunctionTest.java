@@ -79,23 +79,23 @@ public class FilterFunctionTest {
     
     @Test
     public void testAny() {
-        WordSequence empty = new WordSequence("");
+        WordSequence testws = new WordSequence("word");
         FilterFunction any = FilterFunction.forName("any");
-        assertTrue(any.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE))));
-        assertTrue(any.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.TRUE))));
-        assertTrue(any.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.FALSE))));
-        assertFalse(any.invoke(empty, new ArgumentList(Arrays.asList(Filter.FALSE))));
-        assertFalse(any.invoke(empty, new ArgumentList(Arrays.asList(Filter.FALSE, Filter.FALSE))));
+        assertTrue(any.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE))));
+        assertTrue(any.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.TRUE))));
+        assertTrue(any.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.FALSE))));
+        assertFalse(any.invoke(testws, new ArgumentList(Arrays.asList(Filter.FALSE))));
+        assertFalse(any.invoke(testws, new ArgumentList(Arrays.asList(Filter.FALSE, Filter.FALSE))));
     }
     
     @Test
     public void testAll() {
-        WordSequence empty = new WordSequence("");
+        WordSequence testws = new WordSequence("word");
         FilterFunction all = FilterFunction.forName("all");
-        assertTrue(all.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE))));
-        assertTrue(all.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.TRUE))));
-        assertFalse(all.invoke(empty, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.FALSE))));
-        assertFalse(all.invoke(empty, new ArgumentList(Arrays.asList(Filter.FALSE))));
-        assertFalse(all.invoke(empty, new ArgumentList(Arrays.asList(Filter.FALSE, Filter.FALSE))));
+        assertTrue(all.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE))));
+        assertTrue(all.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.TRUE))));
+        assertFalse(all.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.FALSE))));
+        assertFalse(all.invoke(testws, new ArgumentList(Arrays.asList(Filter.FALSE))));
+        assertFalse(all.invoke(testws, new ArgumentList(Arrays.asList(Filter.FALSE, Filter.FALSE))));
     }
 }
