@@ -53,7 +53,7 @@ public class FilterFunctionTest {
         assertFalse(startsWith.invoke(new WordSequence("hello"), new ArgumentList(Arrays.asList("llo"))));
         assertFalse(startsWith.invoke(new WordSequence("hi and bye"), new ArgumentList(Arrays.asList("hi"))));
     }
-    
+
     @Test
     public void testContains() {
         FilterFunction contains = FilterFunction.forName("contains");
@@ -61,7 +61,7 @@ public class FilterFunctionTest {
         assertFalse(contains.invoke(new WordSequence("hello"), new ArgumentList(Arrays.asList("reo"))));
         assertFalse(contains.invoke(new WordSequence("hi and bye"), new ArgumentList(Arrays.asList("and"))));
     }
-    
+
     @Test
     public void testCountWords() {
         FilterFunction countWords = FilterFunction.forName("countWords");
@@ -69,33 +69,33 @@ public class FilterFunctionTest {
         assertTrue(countWords.invoke(new WordSequence("hello goodbye"), new ArgumentList(Arrays.asList(2))));
         assertFalse(countWords.invoke(new WordSequence("hi and bye"), new ArgumentList(Arrays.asList(2))));
     }
-    
+
     @Test
     public void testIn() {
         FilterFunction in = FilterFunction.forName("in");
         assertTrue(in.invoke(new WordSequence("hello"), new ArgumentList(Arrays.asList(Category.forName("words").stream()))));
         assertFalse(in.invoke(new WordSequence("not hello"), new ArgumentList(Arrays.asList(Category.forName("words").stream()))));
     }
-    
+
     @Test
     public void testAny() {
-        WordSequence testws = new WordSequence("word");
+        Filter testFilter = ws -> ws.getWords().get(0).toString().equals("yes"); // yes means true, anything else is false
         FilterFunction any = FilterFunction.forName("any");
-        assertTrue(any.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE))));
-        assertTrue(any.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.TRUE))));
-        assertTrue(any.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.FALSE))));
-        assertFalse(any.invoke(testws, new ArgumentList(Arrays.asList(Filter.FALSE))));
-        assertFalse(any.invoke(testws, new ArgumentList(Arrays.asList(Filter.FALSE, Filter.FALSE))));
+        assertTrue(any.invoke(new WordSequence("yes"), new ArgumentList(Arrays.asList(testFilter))));
+        assertTrue(any.invoke(new WordSequence("yes yes"), new ArgumentList(Arrays.asList(testFilter))));
+        assertTrue(any.invoke(new WordSequence("yes no"), new ArgumentList(Arrays.asList(testFilter))));
+        assertFalse(any.invoke(new WordSequence("no"), new ArgumentList(Arrays.asList(testFilter))));
+        assertFalse(any.invoke(new WordSequence("no no"), new ArgumentList(Arrays.asList(testFilter))));
     }
-    
+
     @Test
     public void testAll() {
-        WordSequence testws = new WordSequence("word");
+        Filter testFilter = ws -> ws.getWords().get(0).toString().equals("yes"); // yes means true, anything else is false
         FilterFunction all = FilterFunction.forName("all");
-        assertTrue(all.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE))));
-        assertTrue(all.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.TRUE))));
-        assertFalse(all.invoke(testws, new ArgumentList(Arrays.asList(Filter.TRUE, Filter.FALSE))));
-        assertFalse(all.invoke(testws, new ArgumentList(Arrays.asList(Filter.FALSE))));
-        assertFalse(all.invoke(testws, new ArgumentList(Arrays.asList(Filter.FALSE, Filter.FALSE))));
+        assertTrue(all.invoke(new WordSequence("yes"), new ArgumentList(Arrays.asList(testFilter))));
+        assertTrue(all.invoke(new WordSequence("yes yes"), new ArgumentList(Arrays.asList(testFilter))));
+        assertFalse(all.invoke(new WordSequence("yes no"), new ArgumentList(Arrays.asList(testFilter))));
+        assertFalse(all.invoke(new WordSequence("no"), new ArgumentList(Arrays.asList(testFilter))));
+        assertFalse(all.invoke(new WordSequence("no no"), new ArgumentList(Arrays.asList(testFilter))));
     }
 }
