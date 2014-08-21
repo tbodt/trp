@@ -45,6 +45,7 @@ public final class CommandProcessor {
         lexer.addErrorListener(errListener);
         ParseTree tree = parser.command();
         CommandParseVisitor visitor = new CommandParseVisitor();
+        @SuppressWarnings("unchecked")
         Stream<WordSequence> dataStream = (Stream<WordSequence>) visitor.visit(tree);
         if (errors == false)
             return Optional.of(dataStream);
