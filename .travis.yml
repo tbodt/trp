@@ -6,5 +6,4 @@ install: true
 
 test: mvn verify -B
 
-after_success:
-  - mvn clean jacoco:report coveralls:jacoco -B
+after_success: mvn clean test jacoco:report coveralls:jacoco -B
