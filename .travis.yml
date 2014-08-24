@@ -5,7 +5,7 @@ jdk:
 install:
   - git clone git://github.com/cobertura/cobertura.git
   - cd cobertura
-  - mvn install -B
+  - mvn -DskipTests install -B
   - cd ..
 
 test: mvn verify -B
