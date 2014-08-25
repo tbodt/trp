@@ -52,6 +52,12 @@ public class TransformerFunctionTest {
         doSingleTest(remove, new String[] {"abc"}, new String[] {"abc"}, "ois");
     }
     
+    @Test
+    public void testAppend() {
+        TransformerFunction append = TransformerFunction.forName("append");
+        doSingleTest(append, new String[] {"ab"}, new String[] {"abc"}, "c");
+    }
+    
     private static void doSingleTest(TransformerFunction fn, String[] input, String[] expectedOutput, Object... args) {
         Stream<WordSequence> in = Arrays.stream(input).map(WordSequence::new);
         Stream<WordSequence> out = Arrays.stream(expectedOutput).map(WordSequence::new);
