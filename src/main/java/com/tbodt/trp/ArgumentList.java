@@ -166,24 +166,4 @@ public class ArgumentList {
     public ArgumentTypeList getArgumentTypes() {
         return argTypes;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final ArgumentList other = (ArgumentList) obj;
-        if (!Objects.equals(this.args, other.args))
-            return false;
-        return Objects.equals(this.argTypes, other.argTypes);
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 11 * hash + Objects.hashCode(this.args);
-        hash = 11 * hash + Objects.hashCode(this.argTypes);
-        return hash;
-    }
 }
