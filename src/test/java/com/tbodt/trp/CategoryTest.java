@@ -17,7 +17,6 @@
 
 package com.tbodt.trp;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.*;
@@ -32,19 +31,23 @@ public class CategoryTest {
     
     @Test
     public void testCategory() {
-        Category cat = Category.forName("words");
+        Category cat = Category.forName("movies");
         Set<WordSequence> fromGetItems = cat.getItems();
         Set<WordSequence> fromStream = cat.stream().collect(Collectors.toSet());
-        if (!fromGetItems.equals(fromStream)) {
-            System.err.println("getItems and stream didn't give the same result");
-            System.err.println("in getItems but not stream:");
-            Set<WordSequence> intersection = new HashSet<>(fromStream);
-            intersection.retainAll(fromGetItems);
-            System.err.println(intersection);
-            System.err.println("in stream but not getItems:");
-            intersection = new HashSet<>(fromGetItems);
-            intersection.retainAll(fromStream);
-            fail();
-        }
+        assertEquals(fromGetItems, fromStream);
+    }
+    
+    @Test
+    public void testFileCategory() {
+        Category fileCat = Category.forName("src/main/resources/com/tbodt/trp/movies");
+        Set<WordSequence> fromGetItems = fileCat.getItems();
+        Set<WordSequence> fromStream = fileCat.stream().collect(Collectors.toSet());
+        assertEquals(fromGetItems, fromStream);
+    }
+    
+    @Test
+    public void testErrors() {
+        assertNull(Category.forName("this category for sure does not exist"));
+        
     }
 }
