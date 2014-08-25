@@ -17,8 +17,10 @@
 
 package com.tbodt.trp;
 
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
@@ -27,9 +29,19 @@ import org.junit.Test;
  */
 public class TransformerFunctionTest {
     @Test
-    public void testFilterAsTransformer() {
-        Transformer tx = new FilterTransformer(FilterFunction.forName("length"), new ArgumentList(Arrays.asList(3)));
-        Stream<WordSequence> testStream = Stream.of(new WordSequence("abc"), new WordSequence("not one word"));
-        tx.transform(testStream);
+    public void testAnagram() {
+        TransformerFunction anagram = TransformerFunction.forName("anagram");
+        doSingleTest(anagram, new String[] {"ab"}, new String[] {"ab", "ba"});
+        doSingleTest(anagram, new String[] {"a"}, new String[] {"a"});
+        doSingleTest(anagram, new String[] {"ab cd"}, new String[] {"ab cd", "ba cd", "ab dc", "ba dc"});
+        doSingleTest(anagram, new String[] {"abc"}, new String[] {"abc", "acb", "bac", "bca", "cab", "cba"});
+    }
+    
+    private static void doSingleTest(TransformerFunction fn, String[] input, String[] expectedOutput, Object... args) {
+        Stream<WordSequence> in = Arrays.stream(input).map(WordSequence::new);
+        Stream<WordSequence> out = Arrays.stream(expectedOutput).map(WordSequence::new);
+        Set<WordSequence> expected = fn.invoke(in, new ArgumentList(Arrays.asList(args))).collect(Collectors.toSet());
+        Set<WordSequence> actual = out.collect(Collectors.toSet());
+        assertEquals(expected, actual);
     }
 }
