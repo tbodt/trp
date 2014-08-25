@@ -44,6 +44,14 @@ public class TransformerFunctionTest {
         doSingleTest(splitWords, new String[] {"abc"}, new String[] {}, 2);
     }
     
+    @Test
+    public void testRemove() {
+        TransformerFunction remove = TransformerFunction.forName("remove");
+        doSingleTest(remove, new String[] {"ab"}, new String[] {"b"}, "a");
+        doSingleTest(remove, new String[] {"abc"}, new String[] {"a"}, "bc");
+        doSingleTest(remove, new String[] {"abc"}, new String[] {"abc"}, "ois");
+    }
+    
     private static void doSingleTest(TransformerFunction fn, String[] input, String[] expectedOutput, Object... args) {
         Stream<WordSequence> in = Arrays.stream(input).map(WordSequence::new);
         Stream<WordSequence> out = Arrays.stream(expectedOutput).map(WordSequence::new);
