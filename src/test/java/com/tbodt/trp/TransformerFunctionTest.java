@@ -37,6 +37,13 @@ public class TransformerFunctionTest {
         doSingleTest(anagram, new String[] {"abc"}, new String[] {"abc", "acb", "bac", "bca", "cab", "cba"});
     }
     
+    @Test
+    public void testSplitWords() {
+        TransformerFunction splitWords = TransformerFunction.forName("splitWords");
+        doSingleTest(splitWords, new String[] {"ab"}, new String[] {"a b"}, 1, 1);
+        doSingleTest(splitWords, new String[] {"abc"}, new String[] {}, 2);
+    }
+    
     private static void doSingleTest(TransformerFunction fn, String[] input, String[] expectedOutput, Object... args) {
         Stream<WordSequence> in = Arrays.stream(input).map(WordSequence::new);
         Stream<WordSequence> out = Arrays.stream(expectedOutput).map(WordSequence::new);
