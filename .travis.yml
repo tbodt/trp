@@ -4,5 +4,5 @@ jdk:
 
 install: true
 
-script: mvn verify test jacoco:report coveralls:jacoco -B
+script: mvn verify jacoco:report coveralls:jacoco -B
 
