@@ -49,7 +49,7 @@ public class TransformerFunctionTest {
         TransformerFunction remove = TransformerFunction.forName("remove");
         doSingleTest(remove, new String[] {"ab"}, new String[] {"b"}, "a");
         doSingleTest(remove, new String[] {"abc"}, new String[] {"a"}, "bc");
-        doSingleTest(remove, new String[] {"abc"}, new String[] {"abc"}, "ois");
+        doSingleTest(remove, new String[] {"abc"}, new String[] {}, "ois");
     }
     
     @Test
