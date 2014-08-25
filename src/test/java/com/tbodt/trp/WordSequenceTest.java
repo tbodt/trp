@@ -45,6 +45,7 @@ public class WordSequenceTest {
         }
         assertEquals(i, 1);
         assertEquals(ws.append(new Word("goodbye")), new WordSequence("hello goodbye"));
+        assertNotEquals(ws, new WordSequence("goodbye"));
     }
 
     @Test
@@ -58,5 +59,10 @@ public class WordSequenceTest {
         for (WordSequence ws1 : shouldBeEqual)
             for (WordSequence ws2 : shouldBeEqual)
                 assertEquals(ws1, ws2);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void wordsWithWhitespace() {
+        Word word = new Word("this word has whitespace");
     }
 }
