@@ -17,7 +17,7 @@
 
 package com.tbodt.trp;
 
-import java.util.stream.Stream;
+import java.util.Arrays;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -33,9 +33,10 @@ public class IntegrationTest {
         testCommand("[testCategory]: countWords(1)", new String[] {"test"});
     }
     
-    private void testCommand(String command, String[] expected) {
-        Stream<WordSequence> result = CommandProcessor.processCommand(command).get();
-        assertArrayEquals(expected, result.toArray());
+    private void testCommand(String command, String[] expectedStrings) {
+        WordSequence[] expected = Arrays.stream(expectedStrings).map(WordSequence::new).toArray(WordSequence[]::new);
+        WordSequence[] actual = CommandProcessor.processCommand(command).get().toArray(WordSequence[]::new);
+        assertArrayEquals(expected, actual);
     }
     
     private void testError(String command) {
