@@ -53,11 +53,13 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
 
     @Override
     public Object visitTransformedData(CommandParser.TransformedDataContext ctx) {
-        Stream<WordSequence> data = (Stream<WordSequence>) visit(ctx.data());
+        Object data = visit(ctx.data());
+        if (data instanceof Category)
+            data = ((Category) data).stream();
         Transformer tx = Transformer.IDENTITY;
         for (CommandParser.TransformationContext tc : ctx.transformation())
             tx = tx.append((Transformer) visit(tc));
-        return tx.transform(data.parallel());
+        return tx.transform(((Stream<WordSequence>) data).parallel());
     }
 
     @Override
