@@ -57,6 +57,12 @@ public class TransformerFunctionTest {
         TransformerFunction append = TransformerFunction.forName("append");
         doSingleTest(append, new String[] {"ab"}, new String[] {"abc"}, "c");
     }
+        
+    @Test
+    public void testCombine() {
+        TransformerFunction combine = TransformerFunction.forName("combine");
+        doSingleTest(combine, new String[] {"ab cd"}, new String[] {"abcd"});
+    }
     
     private static void doSingleTest(TransformerFunction fn, String[] input, String[] expectedOutput, Object... args) {
         Stream<WordSequence> in = Arrays.stream(input).map(WordSequence::new);
