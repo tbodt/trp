@@ -26,20 +26,19 @@ import org.junit.Test;
  * @author Theodore Dubois
  */
 public class ArgumentListTest {
+    private Object[] args = {
+        "hello", // string
+        3, // integer
+        Collections.emptySet(), // set data
+        Stream.empty(), // stream data
+    };
+    private ArgumentList aList = new ArgumentList(Arrays.asList(args));
 
     @Test
     public void testAccessors() {
-        Object[] args = {
-            "hello", // string
-            3, // integer
-            Collections.emptySet(), // set data
-            Stream.empty(), // stream data
-        };
-        ArgumentList aList = new ArgumentList(Arrays.asList(args));
-        
         assertEquals(Arrays.asList(args), aList.arguments());
         assertEquals(args.length, aList.length());
-        
+
         assertEquals("hello", aList.string(0));
         assertEquals("hello", aList.argument(0));
         assertEquals(3, aList.integer(1));
@@ -48,5 +47,25 @@ public class ArgumentListTest {
         assertEquals(Collections.emptySet(), aList.argument(2));
         assertEquals(Collections.emptySet(), aList.data(3));
         assertEquals(Collections.emptySet(), aList.argument(3));
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testStringFailure() {
+        aList.string(1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testIntegerFailureFailure() {
+        aList.integer(0);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testDataFailure() {
+        aList.data(0);
+    }
+    
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testIndexFailure() {
+        aList.argument(1294);
     }
 }
