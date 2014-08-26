@@ -128,6 +128,14 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>
+                        <!-- ignore automatically generated files -->
+                        <exclude>com/tbodt/trp/CommandParser.java</exclude>
+                        <exclude>com/tbodt/trp/CommandLexer.java</exclude>
+                        <exclude>com/tbodt/trp/CommandBaseVisitor.java</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
