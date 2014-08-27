@@ -117,17 +117,23 @@
                 <version>2.2.0</version>
             </plugin>
             <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.1.201405082137</version>
+                <groupId>com.github.timurstrekalov</groupId>
+                <artifactId>saga-maven-plugin</artifactId>
+                <version>1.5.2</version>
                 <executions>
                     <execution>
-                        <id>prepare-agent</id>
                         <goals>
-                            <goal>prepare-agent</goal>
+                            <goal>coverage</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <baseDir>http://localhost:${jasmine.serverPort}</baseDir>
+                    <outputDir>${project.build.directory}/saga-coverage</outputDir>
+                    <noInstrumentPatterns>
+                        <pattern>.*/spec/.*</pattern>
+                    </noInstrumentPatterns>
+                </configuration>
             </plugin>
         </plugins>
     </build>
