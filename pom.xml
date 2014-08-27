@@ -128,14 +128,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <excludes>
-                        <!-- ignore automatically generated files -->
-                        <exclude>com.tbodt.trp.CommandParser</exclude>
-                        <exclude>com.tbodt.trp.CommandLexer</exclude>
-                        <exclude>com.tbodt.trp.CommandBaseVisitor</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>
