@@ -33,6 +33,12 @@ public class IntegrationTest {
         testCommand("[testCategory]: countWords(1)", new String[] {"test"});
     }
     
+    @Test
+    public void testErrors() {
+        testError("[noSuchCategory]");
+        testError("\"\": noSuchFunction");
+    }
+    
     private void testCommand(String command, String[] expectedStrings) {
         WordSequence[] expected = Arrays.stream(expectedStrings).map(WordSequence::new).toArray(WordSequence[]::new);
         WordSequence[] actual = CommandProcessor.processCommand(command).get().toArray(WordSequence[]::new);
