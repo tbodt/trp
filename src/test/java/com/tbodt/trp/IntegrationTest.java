@@ -18,6 +18,7 @@
 package com.tbodt.trp;
 
 import java.util.Arrays;
+import java.util.Optional;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -41,7 +42,10 @@ public class IntegrationTest {
     
     private void testCommand(String command, String[] expectedStrings) {
         WordSequence[] expected = Arrays.stream(expectedStrings).map(WordSequence::new).toArray(WordSequence[]::new);
-        WordSequence[] actual = CommandProcessor.processCommand(command).get().toArray(WordSequence[]::new);
+        System.out.println(command);
+        Optional<Stream<WordSequence>> optional = CommandProcessor.processCommand(command);
+        System.out.println(optional.isPresent());
+        WordSequence[] actual = optional.get().toArray(WordSequence[]::new);
         assertArrayEquals(expected, actual);
     }
     
