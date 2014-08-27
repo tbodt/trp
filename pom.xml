@@ -131,9 +131,9 @@
                 <configuration>
                     <excludes>
                         <!-- ignore automatically generated files -->
-                        <exclude>com/tbodt/trp/CommandParser.java</exclude>
-                        <exclude>com/tbodt/trp/CommandLexer.java</exclude>
-                        <exclude>com/tbodt/trp/CommandBaseVisitor.java</exclude>
+                        <exclude>com.tbodt.trp.CommandParser</exclude>
+                        <exclude>com.tbodt.trp.CommandLexer</exclude>
+                        <exclude>com.tbodt.trp.CommandBaseVisitor</exclude>
                     </excludes>
                 </configuration>
             </plugin>
