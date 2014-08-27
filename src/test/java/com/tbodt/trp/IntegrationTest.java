@@ -42,15 +42,18 @@ public class IntegrationTest {
     }
     
     private void testCommand(String command, String[] expectedStrings) {
+        System.out.println("Entering testCommand: " + command)
         WordSequence[] expected = Arrays.stream(expectedStrings).map(WordSequence::new).toArray(WordSequence[]::new);
-        System.out.println(command);
         Optional<Stream<WordSequence>> optional = CommandProcessor.processCommand(command);
-        System.out.println(optional.isPresent());
+        System.out.println("optional.isPresent(): " + optional.isPresent());
         WordSequence[] actual = optional.get().toArray(WordSequence[]::new);
         assertArrayEquals(expected, actual);
+        System.out.println("Exiting testCommand: " + command);
     }
     
     private void testError(String command) {
+        System.out.println("Entering testError: " + command)
         assertFalse(CommandProcessor.processCommand(command).isPresent());
+        System.out.println("Exiting testCommand: " + command);
     }
 }
