@@ -42,6 +42,7 @@ public class IntegrationTest {
     private void testCommand(String command, String[] expectedStrings) {
         WordSequence[] expected = Arrays.stream(expectedStrings).map(WordSequence::new).toArray(WordSequence[]::new);
         WordSequence[] actual = CommandProcessor.processCommand(command).get().toArray(WordSequence[]::new);
+        assertArrayEquals(expected, actual);
     }
     
     private void testError(String command) {
