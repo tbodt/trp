@@ -30,7 +30,7 @@ public class IntegrationTest {
     public void testCommands() {
         testCommand("\"hi\"", new String[] {"hi"});
         testCommand("[testCategory]", new String[] {"test", "another test", "yet another test"});
-        testCommand("[testCategory]: all(in([testCategory])", new String[] {"test"});
+        testCommand("[testCategory]: all(in([testCategory]))", new String[] {"test"});
     }
     
     @Test
