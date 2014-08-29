@@ -57,7 +57,4 @@ public final class CommandProcessor {
         System.out.println(error);
         errors = true;
     }
-    
-    private CommandProcessor() {
-    }
 }

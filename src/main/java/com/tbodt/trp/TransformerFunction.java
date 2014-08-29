@@ -217,8 +217,5 @@ public class TransformerFunction {
                     .map(ws -> new WordSequence(ws.getWords().get(0) + str));
 
         }
-
-        private Transformers() {
-        }
     }
 }
