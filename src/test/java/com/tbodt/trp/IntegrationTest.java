@@ -30,9 +30,9 @@ public class IntegrationTest {
     @Test
     public void testCommands() {
         testCommand("\"hi\"", new String[] {"hi"});
-        testCommand("[testCategory]", new String[] {"test", "another test", "yet another test"});
-        testCommand("\"hi\": anagram", new String[] {"hi", "ih"});
+        testCommand("\"hi\": anagram append(\"a\"", new String[] {"hia", "iha"});
         testCommand("[testCategory]: all(in([testCategory]))", new String[] {"test"});
+        testCommand("[testCategory]", new String[] {"test", "another test", "yet another test"});
     }
     
     @Test
