@@ -32,7 +32,7 @@ public class IntegrationTest {
         testCommand("\"hi\"", new String[] {"hi"});
         testCommand("\"hi\": anagram append(\"a\")", new String[] {"hia", "iha"});
         testCommand("[testCategory]", new String[] {"test", "another test", "yet another test"});
-        testCommand("[testCategory]: all(in([testCategory]))", new String[] {"test"});
+        testCommand("[testCategory]: all(in([testCategory])) contains(\"t\")", new String[] {"test"});
     }
     
     @Test
