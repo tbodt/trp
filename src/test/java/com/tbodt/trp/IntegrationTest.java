@@ -17,7 +17,8 @@
 
 package com.tbodt.trp;
 
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -40,9 +41,9 @@ public class IntegrationTest {
     }
     
     private void testCommand(String command, String[] expectedStrings) {
-        WordSequence[] expected = Arrays.stream(expectedStrings).map(WordSequence::new).toArray(WordSequence[]::new);
-        WordSequence[] actual = CommandProcessor.processCommand(command).get().toArray(WordSequence[]::new);
-        assertArrayEquals(expected, actual);
+        Set<WordSequence> expected = Arrays.stream(expectedStrings).map(WordSequence::new).collect(Collectors.toSet());
+        Set<WordSequence> actual = CommandProcessor.processCommand(command).get().collect(Collectors.toSet());
+        assertEquals(expected, actual);
     }
     
     private void testError(String command) {
