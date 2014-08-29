@@ -108,10 +108,6 @@ public final class FilterFunction extends TransformerFunction {
         return functions.get(name);
     }
 
-    private FilterFunction(Lambda lambda) {
-        this(lambda, new ArgumentTypeList());
-    }
-
     private FilterFunction(Lambda lambda, ArgumentTypeList argTypes) {
         this(Collections.singletonMap(argTypes, lambda));
     }
