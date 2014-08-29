@@ -23,14 +23,17 @@ import java.util.stream.Stream;
  */
 public interface Transformer {
     /**
+     * The identity transformer, which does nothing to the input.
+     */
+    public Transformer IDENTITY = data -> data;
+
+    /**
      * Apply a series of intermediate operations on {@code data} and return the result.
      *
      * @param data the data to transform
      * @return the result of the transformation
      */
     public Stream<WordSequence> transform(Stream<WordSequence> data);
-
-    public Transformer IDENTITY = (Stream<WordSequence> data) -> data;
 
     /**
      * Returns a new {@link Transformer} that first applies this transformation to the data, then to
