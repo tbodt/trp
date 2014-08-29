@@ -99,7 +99,7 @@ public class CommandParseVisitor extends CommandBaseVisitor<Object> {
             reportError("arguments " + args + " invalid");
             return Transformer.IDENTITY;
         }
-        return new FunctionTransformer(fun, args);
+        return fun.toTransformer(args);
     }
 
     private static String stripEnds(String str) {

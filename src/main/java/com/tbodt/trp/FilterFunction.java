@@ -76,15 +76,6 @@ public final class FilterFunction extends TransformerFunction {
             return in.test(ws, args);
         };
     }
-    /*
-    private static void addOverloading(String name, Lambda lambda, ArgumentTypeList args) {
-        if (!functions.containsKey(name))
-            functions.put(name, new FilterFunction(lambda, args));
-        else {
-            
-        }
-    }
-    */
     
     /**
      * A {@code FunctionalInterface} that describes a filter function.
@@ -132,6 +123,11 @@ public final class FilterFunction extends TransformerFunction {
     @Override
     public Stream<WordSequence> invoke(Stream<WordSequence> data, ArgumentList args) {
         return ((FilterFunction.Lambda) lambdaForArgs(args)).invoke(data, args);
+    }
+    
+    @Override
+    public Filter toTransformer(ArgumentList args) {
+        return ws -> invoke(ws, args);
     }
 
     /**

@@ -98,6 +98,16 @@ public class TransformerFunction {
     public boolean isValidArguments(ArgumentList args) {
         return overloadings.entrySet().stream().anyMatch(entry -> entry.getKey().matches(args));
     }
+    
+    /**
+     * Returns a transformer that invokes this function with the specified {@code args}.
+     * 
+     * @param args the arguments
+     * @return a transformer that invokes this function with the specified {@code args}
+     */
+    public Transformer toTransformer(ArgumentList args) {
+        return data -> invoke(data, args);
+    }
 
     /**
      * Invoke the transformer function.
