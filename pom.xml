@@ -130,12 +130,12 @@
                 </executions>
                 <configuration>
                     <excludes>
+                        <!-- there's no real way to automatically test this class -->
+                        <exclude>com/tbodt/trp/TheRapidPermuter.class</exclude>
                         <!-- ignore automatically generated files -->
                         <exclude>com/tbodt/trp/CommandParser.class</exclude>
                         <exclude>com/tbodt/trp/CommandLexer.class</exclude>
                         <exclude>com/tbodt/trp/CommandBaseVisitor.class</exclude>
-                        <!-- there's no real way to automatically test this class -->
-                        <exclude>com/tbodt/trp/TheRapidPermuter.class</exclude>
                     </excludes>
                 </configuration>
             </plugin>
