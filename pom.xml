@@ -133,6 +133,19 @@
                         <!-- there's no real way to automatically test this class -->
                         <exclude>com/tbodt/trp/TheRapidPermuter.class</exclude>
                         <!-- ignore automatically generated files -->
+                        <exclude>com/tbodt/trp/CommandParser.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$CategoryDataContext.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$CommandContext.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$DataContext.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$DataValueContext.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$FunctionTransformationContext.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$IntValueContext.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$StringDataContext.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$StringValueContext.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$TransformationContext.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$TransformationValueContext.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$TransformedDataContext.class</exclude>
+                        <exclude>com/tbodt/trp/CommandParser$ValueContext.class</exclude>
                         <exclude>com/tbodt/trp/CommandLexer.class</exclude>
                         <exclude>com/tbodt/trp/CommandBaseVisitor.class</exclude>
                     </excludes>
