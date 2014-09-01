@@ -22,12 +22,21 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
+ * A class with static methods that process a TRP command.
  *
  * @author Theodore Dubois
  */
 public final class CommandProcessor {
     private static boolean errors;
 
+    /**
+     * Process a TRP command. If the command succeeded, returns the result in a {@code Optional<Stream<WordSequence>>}. If the command failed, returns
+     * an empty optional.
+     *
+     * @param command the command
+     * @return If the command succeeded, returns the result in a {@code Optional<Stream<WordSequence>>}. If the command failed, returns an empty
+     * optional.
+     */
     public static Optional<Stream<WordSequence>> processCommand(String command) {
         errors = false;
         ANTLRInputStream inputStream = new ANTLRInputStream(command);
@@ -53,8 +62,13 @@ public final class CommandProcessor {
             return Optional.empty();
     }
 
+    /**
+     * Prints out the error message and causes the command being processed to fail.
+     *
+     * @param error the error message
+     */
     public static void reportError(String error) {
-        System.out.println(error);
+        System.err.println(error);
         errors = true;
     }
 }
